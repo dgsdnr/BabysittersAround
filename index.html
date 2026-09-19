@@ -33,9 +33,7 @@
         👶
       </div>
 
-      <h1>
-        Babysitters Around
-      </h1>
+      <h1>Babysitters Around</h1>
 
       <p class="subtitle">
         Найдите русскоязычную няню рядом
@@ -74,17 +72,9 @@
     >
 
       <header class="main-header">
-
-        <h1>
-          Главная
-        </h1>
-
-        <p>
-          Babysitters Around
-        </p>
-
+        <h1>Главная</h1>
+        <p>Babysitters Around</p>
       </header>
-
 
       <div class="menu">
 
@@ -96,7 +86,6 @@
           <span>Найти няню</span>
         </button>
 
-
         <button
           class="menu-button"
           onclick="openFeature('Мои заявки')"
@@ -104,7 +93,6 @@
           <span class="menu-icon">📋</span>
           <span>Мои заявки</span>
         </button>
-
 
         <button
           class="menu-button"
@@ -114,7 +102,6 @@
           <span>Мой профиль</span>
         </button>
 
-
         <button
           class="menu-button"
           onclick="openFeature('Отзывы')"
@@ -123,7 +110,6 @@
           <span>Отзывы</span>
         </button>
 
-
         <button
           class="menu-button"
           onclick="openFeature('Поддержать проект')"
@@ -131,7 +117,6 @@
           <span class="menu-icon">❤️</span>
           <span>Поддержать проект</span>
         </button>
-
 
         <button
           class="menu-button"
@@ -142,7 +127,6 @@
         </button>
 
       </div>
-
 
       <button
         class="close-button"
@@ -166,19 +150,33 @@
 
       <header class="main-header">
 
-        <h1>
-          Главная
-        </h1>
+        <div class="availability-toggle">
+          <div>
+            <strong>Доступна в поиске</strong>
+            <small id="availabilityText">
+              Сейчас вы отображаетесь родителям
+            </small>
+          </div>
 
-        <p>
-          Babysitters Around
-        </p>
+          <label class="switch">
+            <input
+              type="checkbox"
+              id="searchAvailability"
+              checked
+              onchange="toggleSearchAvailability()"
+            >
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <h1>Главная</h1>
+
+        <p>Babysitters Around</p>
 
       </header>
 
 
       <div class="menu">
-
 
         <button
           class="menu-button"
@@ -191,7 +189,7 @@
 
         <button
           class="menu-button"
-          onclick="openFeature('Моя анкета')"
+          onclick="openNannyQuestionnaire()"
         >
           <span class="menu-icon">👩‍🍼</span>
           <span>Моя анкета</span>
@@ -250,6 +248,486 @@
         onclick="goWelcome()"
       >
         ← Назад
+      </button>
+
+    </section>
+
+
+
+    <!-- ========================= -->
+    <!-- NANNY QUESTIONNAIRE -->
+    <!-- ========================= -->
+
+    <section
+      id="nannyQuestionnaire"
+      class="screen hidden"
+    >
+
+      <header class="page-header">
+
+        <button
+          class="page-close"
+          onclick="closeQuestionnaire()"
+        >
+          ×
+        </button>
+
+        <h1>Моя анкета</h1>
+
+        <p>
+          Эта информация будет видна родителям.
+        </p>
+
+      </header>
+
+
+      <!-- Основная информация -->
+
+      <div class="form-section">
+
+        <h2>Основная информация</h2>
+
+        <label>
+          Имя *
+          <input
+            id="nannyName"
+            type="text"
+            placeholder="Как вас зовут?"
+          >
+        </label>
+
+
+        <label>
+          Возраст *
+          <input
+            id="nannyAge"
+            type="number"
+            min="16"
+            max="100"
+            placeholder="Ваш возраст"
+          >
+        </label>
+
+
+        <label>
+          Город *
+          <input
+            id="nannyCity"
+            type="text"
+            placeholder="Например, Нови-Сад"
+          >
+        </label>
+
+
+        <label>
+          Языки *
+          <input
+            id="nannyLanguages"
+            type="text"
+            placeholder="Например, русский, английский"
+          >
+        </label>
+
+      </div>
+
+
+
+      <!-- Дети -->
+
+      <div class="form-section">
+
+        <h2>С какими детьми вы работаете?</h2>
+
+        <div class="checkbox-list">
+
+          <label class="checkbox">
+            <input
+              type="checkbox"
+              name="childrenAge"
+              value="До 1 года"
+            >
+            <span>До 1 года</span>
+          </label>
+
+          <label class="checkbox">
+            <input
+              type="checkbox"
+              name="childrenAge"
+              value="1–3 года"
+            >
+            <span>1–3 года</span>
+          </label>
+
+          <label class="checkbox">
+            <input
+              type="checkbox"
+              name="childrenAge"
+              value="3–6 лет"
+            >
+            <span>3–6 лет</span>
+          </label>
+
+          <label class="checkbox">
+            <input
+              type="checkbox"
+              name="childrenAge"
+              value="6–12 лет"
+            >
+            <span>6–12 лет</span>
+          </label>
+
+          <label class="checkbox">
+            <input
+              type="checkbox"
+              name="childrenAge"
+              value="12+ лет"
+            >
+            <span>12+ лет</span>
+          </label>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- Опыт -->
+
+      <div class="form-section">
+
+        <h2>Опыт</h2>
+
+        <label>
+          Опыт работы с детьми
+          <textarea
+            id="nannyExperience"
+            maxlength="1000"
+            placeholder="Расскажите о вашем опыте..."
+          ></textarea>
+        </label>
+
+
+        <label>
+          Опыт с детьми с особенностями
+          <textarea
+            id="specialExperience"
+            maxlength="500"
+            placeholder="Если есть, расскажите подробнее"
+          ></textarea>
+        </label>
+
+      </div>
+
+
+
+      <!-- Образование -->
+
+      <div class="form-section">
+
+        <h2>Образование и обучение</h2>
+
+        <label>
+          Образование
+          <textarea
+            id="nannyEducation"
+            maxlength="700"
+            placeholder="Например: педагогическое образование..."
+          ></textarea>
+        </label>
+
+
+        <label>
+          Курсы и дополнительное обучение
+          <textarea
+            id="nannyCourses"
+            maxlength="700"
+            placeholder="Первая помощь, психология, развитие детей..."
+          ></textarea>
+        </label>
+
+      </div>
+
+
+
+      <!-- Работа -->
+
+      <div class="form-section">
+
+        <h2>Работа</h2>
+
+        <p class="field-description">
+          Где вы готовы работать?
+        </p>
+
+        <div class="checkbox-list">
+
+          <label class="checkbox">
+            <input
+              type="checkbox"
+              name="workFormat"
+              value="У семьи"
+            >
+            <span>У семьи</span>
+          </label>
+
+          <label class="checkbox">
+            <input
+              type="checkbox"
+              name="workFormat"
+              value="У няни"
+            >
+            <span>У няни</span>
+          </label>
+
+          <label class="checkbox">
+            <input
+              type="checkbox"
+              name="workFormat"
+              value="В другом месте"
+            >
+            <span>В другом месте</span>
+          </label>
+
+        </div>
+
+
+        <label>
+          Минимальная стоимость за час *
+          <div class="price-row">
+
+            <input
+              id="nannyPrice"
+              type="number"
+              min="0"
+              placeholder="Например, 10"
+            >
+
+            <select id="nannyCurrency">
+              <option value="EUR">€ EUR</option>
+              <option value="USD">$ USD</option>
+              <option value="RSD">RSD</option>
+            </select>
+
+          </div>
+        </label>
+
+
+        <label class="checkbox single">
+
+          <input
+            id="liveIn"
+            type="checkbox"
+          >
+
+          <span>
+            Готова работать с проживанием
+          </span>
+
+        </label>
+
+
+        <label class="checkbox single">
+
+          <input
+            id="nightWork"
+            type="checkbox"
+          >
+
+          <span>
+            Готова работать ночью
+          </span>
+
+        </label>
+
+
+        <label class="checkbox single">
+
+          <input
+            id="travelWithFamily"
+            type="checkbox"
+          >
+
+          <span>
+            Готова путешествовать с семьёй
+          </span>
+
+        </label>
+
+      </div>
+
+
+
+      <!-- Автомобиль и первая помощь -->
+
+      <div class="form-section">
+
+        <h2>Дополнительные возможности</h2>
+
+        <label class="checkbox single">
+
+          <input
+            id="hasCar"
+            type="checkbox"
+          >
+
+          <span>
+            У меня есть автомобиль
+          </span>
+
+        </label>
+
+
+        <label class="checkbox single">
+
+          <input
+            id="useCar"
+            type="checkbox"
+          >
+
+          <span>
+            Готова использовать автомобиль в работе
+          </span>
+
+        </label>
+
+
+        <label class="checkbox single">
+
+          <input
+            id="firstAid"
+            type="checkbox"
+          >
+
+          <span>
+            Есть обучение первой помощи
+          </span>
+
+        </label>
+
+      </div>
+
+
+
+      <!-- О себе -->
+
+      <div class="form-section">
+
+        <h2>О себе</h2>
+
+        <label>
+          Коротко о себе *
+          <textarea
+            id="nannyAbout"
+            maxlength="500"
+            placeholder="Расскажите родителям немного о себе..."
+          ></textarea>
+
+          <small>До 500 символов</small>
+        </label>
+
+
+        <label>
+          Интересы и хобби
+          <textarea
+            id="nannyHobbies"
+            maxlength="500"
+            placeholder="Что вам нравится?"
+          ></textarea>
+        </label>
+
+
+        <label>
+          Дополнительная информация
+          <textarea
+            id="nannyAdditional"
+            maxlength="1000"
+            placeholder="Всё, что ещё важно рассказать родителям"
+          ></textarea>
+        </label>
+
+      </div>
+
+
+
+      <!-- Фото -->
+
+      <div class="form-section">
+
+        <h2>Фотографии</h2>
+
+        <p class="field-description">
+          В будущем здесь можно будет добавить несколько фотографий.
+        </p>
+
+        <div class="photo-placeholder">
+          📷
+          <span>Добавить фотографии</span>
+        </div>
+
+      </div>
+
+
+
+      <!-- Кнопки -->
+
+      <div class="form-actions">
+
+        <button
+          class="button button-secondary"
+          onclick="saveQuestionnaire()"
+        >
+          Сохранить
+        </button>
+
+
+        <button
+          class="button button-primary"
+          onclick="publishQuestionnaire()"
+        >
+          Опубликовать анкету
+        </button>
+
+      </div>
+
+
+      <button
+        class="close-button"
+        onclick="closeQuestionnaire()"
+      >
+        × Закрыть
+      </button>
+
+    </section>
+
+
+
+    <!-- ========================= -->
+    <!-- PUBLICATION SUCCESS -->
+    <!-- ========================= -->
+
+    <section
+      id="publicationSuccess"
+      class="screen hidden welcome"
+    >
+
+      <div class="logo">
+        ❤️
+      </div>
+
+      <h1>
+        Анкета опубликована
+      </h1>
+
+      <p class="subtitle">
+        Теперь родители могут найти вас
+        в поиске Babysitters Around.
+      </p>
+
+      <button
+        class="button button-primary"
+        onclick="goNannyHome()"
+      >
+        На главную
       </button>
 
     </section>
