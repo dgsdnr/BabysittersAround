@@ -20,13 +20,20 @@ body {
   color: #333;
 }
 
-button {
+button,
+input,
+textarea,
+select {
   font-family: inherit;
+}
+
+button {
+  cursor: pointer;
 }
 
 .app {
   min-height: 100vh;
-  padding: 24px 20px;
+  padding: 20px 16px 40px;
 }
 
 .screen {
@@ -39,10 +46,13 @@ button {
   display: none !important;
 }
 
-/* ---------- Welcome ---------- */
+
+/* ========================= */
+/* WELCOME */
+/* ========================= */
 
 .welcome {
-  min-height: calc(100vh - 48px);
+  min-height: calc(100vh - 60px);
 
   display: flex;
   flex-direction: column;
@@ -87,7 +97,10 @@ h1 {
   line-height: 1.5;
 }
 
-/* ---------- Buttons ---------- */
+
+/* ========================= */
+/* BUTTONS */
+/* ========================= */
 
 .buttons {
   width: 100%;
@@ -108,8 +121,6 @@ h1 {
 
   font-size: 17px;
   font-weight: 600;
-
-  cursor: pointer;
 }
 
 .button-primary {
@@ -131,10 +142,13 @@ h1 {
   font-weight: 400;
 }
 
-/* ---------- Main ---------- */
+
+/* ========================= */
+/* MAIN */
+/* ========================= */
 
 .main-header {
-  padding: 20px 0 28px;
+  padding: 10px 0 24px;
 }
 
 .main-header h1 {
@@ -172,12 +186,10 @@ h1 {
 
   font-size: 17px;
   font-weight: 600;
-
-  cursor: pointer;
 }
 
 .menu-icon {
-  width: 36px;
+  width: 38px;
 
   font-size: 23px;
 }
@@ -193,24 +205,349 @@ h1 {
   color: #777;
 
   font-size: 16px;
-
-  cursor: pointer;
 }
 
-/* ---------- Mobile ---------- */
+
+/* ========================= */
+/* AVAILABILITY TOGGLE */
+/* ========================= */
+
+.availability-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 24px;
+  padding: 15px 16px;
+
+  background: white;
+
+  border-radius: 18px;
+
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.availability-toggle strong {
+  display: block;
+
+  margin-bottom: 4px;
+
+  font-size: 15px;
+}
+
+.availability-toggle small {
+  color: #777;
+  font-size: 12px;
+}
+
+
+/* Toggle */
+
+.switch {
+  position: relative;
+
+  display: inline-block;
+
+  width: 48px;
+  height: 28px;
+
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+
+  background: #ccc;
+
+  border-radius: 30px;
+
+  transition: 0.2s;
+}
+
+.slider:before {
+  content: "";
+
+  position: absolute;
+
+  width: 22px;
+  height: 22px;
+
+  left: 3px;
+  top: 3px;
+
+  background: white;
+
+  border-radius: 50%;
+
+  transition: 0.2s;
+}
+
+.switch input:checked + .slider {
+  background: #55a868;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+
+/* ========================= */
+/* PAGE HEADER */
+/* ========================= */
+
+.page-header {
+  position: relative;
+
+  padding: 8px 40px 24px 0;
+}
+
+.page-header h1 {
+  font-size: 28px;
+}
+
+.page-header p {
+  margin: 0;
+
+  color: #777;
+}
+
+.page-close {
+  position: absolute;
+
+  right: 0;
+  top: 0;
+
+  width: 36px;
+  height: 36px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: white;
+
+  font-size: 25px;
+  line-height: 1;
+
+  color: #666;
+}
+
+
+/* ========================= */
+/* FORM */
+/* ========================= */
+
+.form-section {
+  margin-bottom: 18px;
+  padding: 20px;
+
+  background: white;
+
+  border-radius: 20px;
+
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.04);
+}
+
+.form-section h2 {
+  margin: 0 0 18px;
+
+  font-size: 19px;
+}
+
+.form-section label {
+  display: block;
+
+  margin-bottom: 16px;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-section label:last-child {
+  margin-bottom: 0;
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+
+  margin-top: 7px;
+
+  padding: 13px 14px;
+
+  border: 1px solid #ddd;
+  border-radius: 13px;
+
+  background: #fff;
+
+  color: #333;
+
+  font-size: 16px;
+
+  outline: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #999;
+}
+
+textarea {
+  min-height: 110px;
+
+  resize: vertical;
+
+  line-height: 1.45;
+}
+
+small {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #999;
+
+  font-size: 12px;
+}
+
+.field-description {
+  margin: -6px 0 14px;
+
+  color: #777;
+
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+
+/* ========================= */
+/* CHECKBOXES */
+/* ========================= */
+
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.checkbox {
+  display: flex !important;
+  align-items: center;
+
+  gap: 10px;
+
+  margin: 0 !important;
+
+  padding: 11px 12px;
+
+  border-radius: 12px;
+
+  background: #fafafa;
+
+  font-weight: 400 !important;
+}
+
+.checkbox input {
+  width: 20px;
+  height: 20px;
+
+  flex-shrink: 0;
+}
+
+.checkbox.single {
+  background: #fafafa;
+
+  margin-bottom: 10px !important;
+}
+
+
+/* ========================= */
+/* PRICE */
+/* ========================= */
+
+.price-row {
+  display: flex;
+
+  gap: 8px;
+}
+
+.price-row input {
+  flex: 1;
+}
+
+.price-row select {
+  width: 105px;
+}
+
+
+/* ========================= */
+/* PHOTOS */
+/* ========================= */
+
+.photo-placeholder {
+  min-height: 120px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  gap: 8px;
+
+  border: 2px dashed #ddd;
+  border-radius: 16px;
+
+  color: #999;
+
+  font-size: 15px;
+}
+
+.photo-placeholder:first-line {
+  font-size: 28px;
+}
+
+
+/* ========================= */
+/* FORM ACTIONS */
+/* ========================= */
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+
+  margin-top: 8px;
+}
+
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
 
 @media (max-width: 420px) {
 
   .app {
-    padding: 20px 16px;
+    padding-left: 14px;
+    padding-right: 14px;
   }
 
   h1 {
     font-size: 28px;
   }
 
-  .menu-button {
-    padding: 16px;
+  .form-section {
+    padding: 17px;
   }
 
 }
