@@ -3,7 +3,6 @@
 /* ========================= */
 
 function showScreen(screenId) {
-
   document
     .querySelectorAll(".screen")
     .forEach(screen => {
@@ -15,7 +14,6 @@ function showScreen(screenId) {
   if (screen) {
     screen.classList.remove("hidden");
   }
-
 }
 
 
@@ -34,6 +32,7 @@ function chooseRole(role) {
 
     loadQuestionnaire();
     loadAvailability();
+    renderPhotos();
   }
 
 }
@@ -47,9 +46,11 @@ function goWelcome() {
   showScreen("welcomeScreen");
 }
 
+
 function goNannyHome() {
   showScreen("nannyHome");
 }
+
 
 function openFeature(name) {
 
@@ -62,7 +63,7 @@ function openFeature(name) {
 
 
 /* ========================= */
-/* NANNY AVAILABILITY */
+/* NANNY SEARCH AVAILABILITY */
 /* ========================= */
 
 function toggleSearchAvailability() {
@@ -135,6 +136,7 @@ function loadAvailability() {
 function openNannyQuestionnaire() {
 
   loadQuestionnaire();
+  renderPhotos();
 
   showScreen("nannyQuestionnaire");
 
@@ -149,7 +151,7 @@ function closeQuestionnaire() {
 
 
 /* ========================= */
-/* SAVE QUESTIONNAIRE */
+/* COLLECT QUESTIONNAIRE */
 /* ========================= */
 
 function collectQuestionnaire() {
@@ -244,6 +246,10 @@ function collectQuestionnaire() {
 }
 
 
+/* ========================= */
+/* SAVE QUESTIONNAIRE */
+/* ========================= */
+
 function saveQuestionnaire() {
 
   const data =
@@ -274,10 +280,12 @@ function loadQuestionnaire() {
     );
 
   if (!saved) {
+    renderPhotos();
     return;
   }
 
-  const data = JSON.parse(saved);
+  const data =
+    JSON.parse(saved);
 
 
   document.getElementById("nannyName").value =
@@ -359,6 +367,608 @@ function loadQuestionnaire() {
 
     });
 
+
+  renderPhotos();
+
+}
+
+
+/* ========================= */
+/* PHOTOS */
+/* ========================= */
+
+function getSavedPhotos() {
+
+  const saved =
+    localStorage.getItem("nannyPhotos");
+
+  if (!saved) {
+    return [];
+  }
+
+  try {
+    return JSON.parse(saved);
+  } catch {
+    return [];
+  }
+
+}
+
+
+function savePhotos(photos) {
+
+  localStorage.setItem(
+    "nannyPhotos",
+    JSON.stringify(photos)
+  );
+
+}
+
+
+function resizeImage(file) {
+
+  return new Promise((resolve, reject) => {
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+
+      const image = new Image();
+
+      image.onload = function() {
+
+        const maxSize = 1000;
+
+        let width = image.width;
+        let height = image.height;
+
+
+        if (width > maxSize || height > maxSize) {
+
+          if (width > height) {
+
+            height =
+              Math.round(
+                height * maxSize / width
+              );
+
+            width = maxSize;
+
+          } else {
+
+            width =
+              Math.round(
+                width * maxSize / height
+              );
+
+            height = maxSize;
+
+          }
+
+        }
+
+
+        const canvas =
+          document.createElement("canvas");
+
+        canvas.width = width;
+        canvas.height = height;
+
+
+        const context =
+          canvas.getContext("2d");
+
+        context.drawImage(
+          image,
+          0,
+          0,
+          width,
+          height
+        );
+
+
+        const result =
+          canvas.toDataURL(
+            "image/jpeg",
+            0.75
+          );
+
+        resolve(result);
+
+      };
+
+
+      image.onerror = reject;
+
+      image.src = event.target.result;
+
+    };
+
+
+    reader.onerror = reject;
+
+    reader.readAsDataURL(file);
+
+  });
+
+}
+
+
+async function handlePhotoFiles(event) {
+
+  let photos =
+    getSavedPhotos();
+
+  const files =
+    Array.from(event.target.files);
+
+  if (files.length === 0) {
+    return;
+  }
+
+
+  const remaining =
+    5 - photos.length;
+
+
+  if (remaining <= 0) {
+
+    alert(
+      "Можно добавить максимум 5 фотографий."
+    );
+
+    event.target.value = "";
+
+    return;
+  }
+
+
+  const selected =
+    files.slice(0, remaining);
+
+
+  try {
+
+    for (const file of selected) {
+
+      const photo =
+        await resizeImage(file);
+
+      photos.push(photo);
+
+    }
+
+    savePhotos(photos);
+
+    renderPhotos();
+
+  } catch (error) {
+
+    alert(
+      "Не удалось загрузить одну из фотографий."
+    );
+
+  }
+
+
+  event.target.value = "";
+
+}
+
+
+function deletePhoto(index) {
+
+  const photos =
+    getSavedPhotos();
+
+  photos.splice(index, 1);
+
+  savePhotos(photos);
+
+  renderPhotos();
+
+}
+
+
+function renderPhotos() {
+
+  const gallery =
+    document.getElementById("photoGallery");
+
+  if (!gallery) {
+    return;
+  }
+
+
+  const photos =
+    getSavedPhotos();
+
+
+  gallery.innerHTML = "";
+
+
+  photos.forEach((photo, index) => {
+
+    const item =
+      document.createElement("div");
+
+    item.className =
+      "photo-item";
+
+
+    const image =
+      document.createElement("img");
+
+    image.src = photo;
+
+    image.alt =
+      index === 0
+        ? "Главная фотография"
+        : "Фотография";
+
+
+    const deleteButton =
+      document.createElement("button");
+
+    deleteButton.type =
+      "button";
+
+    deleteButton.className =
+      "photo-delete";
+
+    deleteButton.textContent =
+      "×";
+
+    deleteButton.onclick =
+      () => deletePhoto(index);
+
+
+    item.appendChild(image);
+
+
+    if (index === 0) {
+
+      const mainLabel =
+        document.createElement("span");
+
+      mainLabel.className =
+        "photo-main-label";
+
+      mainLabel.textContent =
+        "Главная";
+
+      item.appendChild(mainLabel);
+
+    }
+
+
+    item.appendChild(deleteButton);
+
+    gallery.appendChild(item);
+
+  });
+
+}
+
+
+/* ========================= */
+/* CALENDAR */
+/* ========================= */
+
+let calendarDate =
+  new Date();
+
+
+function getAvailabilityData() {
+
+  const saved =
+    localStorage.getItem(
+      "nannyAvailability"
+    );
+
+  if (!saved) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(saved);
+  } catch {
+    return {};
+  }
+
+}
+
+
+function saveAvailabilityData(data) {
+
+  localStorage.setItem(
+    "nannyAvailability",
+    JSON.stringify(data)
+  );
+
+}
+
+
+function dateKey(year, month, day) {
+
+  const monthString =
+    String(month + 1).padStart(2, "0");
+
+  const dayString =
+    String(day).padStart(2, "0");
+
+  return (
+    year +
+    "-" +
+    monthString +
+    "-" +
+    dayString
+  );
+
+}
+
+
+function openAvailabilityCalendar() {
+
+  calendarDate =
+    new Date();
+
+  renderCalendar();
+
+  showScreen(
+    "availabilityCalendar"
+  );
+
+}
+
+
+function closeAvailabilityCalendar() {
+
+  showScreen("nannyHome");
+
+}
+
+
+function changeCalendarMonth(direction) {
+
+  calendarDate =
+    new Date(
+      calendarDate.getFullYear(),
+      calendarDate.getMonth() + direction,
+      1
+    );
+
+  renderCalendar();
+
+}
+
+
+function renderCalendar() {
+
+  const title =
+    document.getElementById(
+      "calendarMonthTitle"
+    );
+
+  const grid =
+    document.getElementById(
+      "calendarGrid"
+    );
+
+  if (!title || !grid) {
+    return;
+  }
+
+
+  const months = [
+    "Январь",
+    "Февраль",
+    "Март",
+    "Апрель",
+    "Май",
+    "Июнь",
+    "Июль",
+    "Август",
+    "Сентябрь",
+    "Октябрь",
+    "Ноябрь",
+    "Декабрь"
+  ];
+
+
+  const year =
+    calendarDate.getFullYear();
+
+  const month =
+    calendarDate.getMonth();
+
+
+  title.textContent =
+    months[month] +
+    " " +
+    year;
+
+
+  grid.innerHTML = "";
+
+
+  const firstDay =
+    new Date(year, month, 1);
+
+  let startDay =
+    firstDay.getDay();
+
+  // В JavaScript воскресенье = 0.
+  // Нам нужен календарь с понедельника.
+  startDay =
+    startDay === 0
+      ? 6
+      : startDay - 1;
+
+
+  const daysInMonth =
+    new Date(
+      year,
+      month + 1,
+      0
+    ).getDate();
+
+
+  const today =
+    new Date();
+
+  today.setHours(0, 0, 0, 0);
+
+
+  const availability =
+    getAvailabilityData();
+
+
+  // Пустые клетки перед первым днём.
+  for (
+    let i = 0;
+    i < startDay;
+    i++
+  ) {
+
+    const empty =
+      document.createElement("div");
+
+    empty.className =
+      "calendar-empty";
+
+    grid.appendChild(empty);
+
+  }
+
+
+  for (
+    let day = 1;
+    day <= daysInMonth;
+    day++
+  ) {
+
+    const button =
+      document.createElement("button");
+
+    button.type =
+      "button";
+
+    button.className =
+      "calendar-day";
+
+
+    const currentDay =
+      new Date(
+        year,
+        month,
+        day
+      );
+
+    currentDay.setHours(
+      0, 0, 0, 0
+    );
+
+
+    const key =
+      dateKey(
+        year,
+        month,
+        day
+      );
+
+
+    const status =
+      availability[key];
+
+
+    button.textContent =
+      day;
+
+
+    if (status) {
+      button.classList.add(status);
+    }
+
+
+    if (
+      currentDay.getTime() ===
+      today.getTime()
+    ) {
+
+      button.classList.add(
+        "today"
+      );
+
+    }
+
+
+    if (
+      currentDay < today
+    ) {
+
+      button.classList.add(
+        "past"
+      );
+
+      button.disabled = true;
+
+    } else {
+
+      button.onclick =
+        () => cycleDayStatus(key);
+
+    }
+
+
+    grid.appendChild(button);
+
+  }
+
+}
+
+
+function cycleDayStatus(key) {
+
+  const availability =
+    getAvailabilityData();
+
+  const current =
+    availability[key];
+
+
+  if (!current) {
+
+    availability[key] =
+      "free";
+
+  } else if (
+    current === "free"
+  ) {
+
+    availability[key] =
+      "partial";
+
+  } else if (
+    current === "partial"
+  ) {
+
+    availability[key] =
+      "busy";
+
+  } else {
+
+    delete availability[key];
+
+  }
+
+
+  saveAvailabilityData(
+    availability
+  );
+
+  renderCalendar();
+
 }
 
 
@@ -374,36 +984,77 @@ function publishQuestionnaire() {
 
   const required = [];
 
+
   if (!data.name.trim()) {
     required.push("Имя");
   }
+
 
   if (!data.age) {
     required.push("Возраст");
   }
 
+
   if (!data.city.trim()) {
     required.push("Город");
   }
+
 
   if (!data.languages.trim()) {
     required.push("Языки");
   }
 
-  if (data.childrenAge.length === 0) {
-    required.push("Возраст детей");
+
+  if (
+    data.childrenAge.length === 0
+  ) {
+
+    required.push(
+      "Возраст детей"
+    );
+
   }
 
-  if (data.workFormat.length === 0) {
-    required.push("Формат работы");
+
+  if (
+    data.workFormat.length === 0
+  ) {
+
+    required.push(
+      "Формат работы"
+    );
+
   }
+
 
   if (!data.price) {
-    required.push("Минимальная стоимость");
+
+    required.push(
+      "Минимальная стоимость"
+    );
+
   }
 
+
   if (!data.about.trim()) {
-    required.push("О себе");
+
+    required.push(
+      "О себе"
+    );
+
+  }
+
+
+  const photos =
+    getSavedPhotos();
+
+
+  if (photos.length === 0) {
+
+    required.push(
+      "Фотография"
+    );
+
   }
 
 
@@ -431,6 +1082,8 @@ function publishQuestionnaire() {
   );
 
 
-  showScreen("publicationSuccess");
+  showScreen(
+    "publicationSuccess"
+  );
 
 }
