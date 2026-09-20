@@ -198,7 +198,7 @@
 
         <button
           class="menu-button"
-          onclick="openFeature('Доступность')"
+          onclick="openAvailabilityCalendar()"
         >
           <span class="menu-icon">📅</span>
           <span>Доступность</span>
@@ -649,23 +649,60 @@
 
 
 
-      <!-- Фото -->
+    <!-- ========================= -->
+<!-- ФОТО -->
+<!-- ========================= -->
 
-      <div class="form-section">
+<div class="form-section">
+  <h2>Фотографии *</h2>
 
-        <h2>Фотографии</h2>
+  <p class="field-description">
+    Добавьте несколько фотографий. Первое фото будет главным.
+  </p>
 
-        <p class="field-description">
-          В будущем здесь можно будет добавить несколько фотографий.
-        </p>
+  <input
+    id="nannyPhotosInput"
+    type="file"
+    accept="image/*"
+    multiple
+    hidden
+    onchange="handlePhotoFiles(event)"
+  >
 
-        <div class="photo-placeholder">
-          📷
-          <span>Добавить фотографии</span>
-        </div>
+  <button
+    type="button"
+    class="photo-add-button"
+    onclick="document.getElementById('nannyPhotosInput').click()"
+  >
+    📷 Добавить фотографии
+  </button>
 
-      </div>
+  <div id="photoGallery" class="photo-gallery"></div>
 
+  <small>
+    Можно добавить до 5 фотографий.
+  </small>
+</div>
+
+      <!-- ========================= -->
+<!-- ДОСТУПНОСТЬ -->
+<!-- ========================= -->
+
+<div class="form-section">
+  <h2>Доступность</h2>
+
+  <p class="field-description">
+    Отметьте, в какие дни вы свободны, частично заняты или полностью заняты.
+  </p>
+
+  <button
+    type="button"
+    class="button button-secondary"
+    onclick="openAvailabilityCalendar()"
+  >
+    📅 Открыть календарь
+  </button>
+</div>
 
 
       <!-- Кнопки -->
@@ -698,6 +735,107 @@
       </button>
 
     </section>
+
+
+    <!-- ========================= -->
+<!-- AVAILABILITY CALENDAR -->
+<!-- ========================= -->
+
+<section
+  id="availabilityCalendar"
+  class="screen hidden"
+>
+
+  <header class="page-header">
+
+    <button
+      class="page-close"
+      onclick="closeAvailabilityCalendar()"
+    >
+      ×
+    </button>
+
+    <h1>Доступность</h1>
+
+    <p>
+      Нажимайте на день, чтобы изменить его статус.
+    </p>
+
+  </header>
+
+
+  <div class="calendar-section">
+
+    <div class="calendar-navigation">
+
+      <button
+        type="button"
+        class="calendar-arrow"
+        onclick="changeCalendarMonth(-1)"
+      >
+        ‹
+      </button>
+
+      <strong id="calendarMonthTitle"></strong>
+
+      <button
+        type="button"
+        class="calendar-arrow"
+        onclick="changeCalendarMonth(1)"
+      >
+        ›
+      </button>
+
+    </div>
+
+
+    <div class="calendar-weekdays">
+      <span>Пн</span>
+      <span>Вт</span>
+      <span>Ср</span>
+      <span>Чт</span>
+      <span>Пт</span>
+      <span>Сб</span>
+      <span>Вс</span>
+    </div>
+
+
+    <div
+      id="calendarGrid"
+      class="calendar-grid"
+    ></div>
+
+
+    <div class="calendar-legend">
+
+      <div>
+        <span class="legend-dot free"></span>
+        Свободна
+      </div>
+
+      <div>
+        <span class="legend-dot partial"></span>
+        Частично занята
+      </div>
+
+      <div>
+        <span class="legend-dot busy"></span>
+        Занята
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <button
+    class="close-button"
+    onclick="closeAvailabilityCalendar()"
+  >
+    × Закрыть
+  </button>
+
+</section>
 
 
 
