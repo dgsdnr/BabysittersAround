@@ -64,18 +64,20 @@
 
     <!-- PARENT HOME -->
 <section id="parentHome" class="screen hidden">
+
   <header class="main-header">
     <h1>Главная</h1>
     <p>Babysitters Around</p>
   </header>
 
   <div class="menu">
+
     <button class="menu-button" onclick="openParentSearch()">
       <span class="menu-icon">🔎</span>
       <span>Найти няню</span>
     </button>
 
-    <button class="menu-button" onclick="openFeature('Мои заявки')">
+    <button class="menu-button" onclick="openParentRequests()">
       <span class="menu-icon">📋</span>
       <span>Мои заявки</span>
     </button>
@@ -99,10 +101,15 @@
       <span class="menu-icon">⚙️</span>
       <span>Настройки</span>
     </button>
+
   </div>
 
-  <button class="close-button" onclick="goWelcome()">← Назад</button>
+  <button class="close-button" onclick="goWelcome()">
+    ← Назад
+  </button>
+
 </section>
+
 
 
 <!-- PARENT PROFILE -->
@@ -358,7 +365,296 @@
 </section>
 
 
-<!-- NANNY HOME -->
+
+    <!-- CREATE REQUEST -->
+<section id="createRequest" class="screen hidden">
+
+  <header class="page-header">
+    <button class="page-close" onclick="closeRequestScreen()">×</button>
+    <h1>Заявка няне</h1>
+    <p>Проверьте информацию перед отправкой</p>
+  </header>
+
+
+  <div class="form-section">
+
+    <h2>Няня</h2>
+
+    <div id="requestNannySummary"></div>
+
+  </div>
+
+
+  <div class="form-section">
+
+    <label for="requestParentName">
+      Ваше имя
+    </label>
+
+    <input
+      type="text"
+      id="requestParentName"
+      placeholder="Ваше имя"
+      maxlength="100"
+    >
+
+
+    <label for="requestCity">
+      Город
+    </label>
+
+    <input
+      type="text"
+      id="requestCity"
+      placeholder="Город"
+    >
+
+
+    <h2>Дети</h2>
+
+    <div id="requestChildrenSummary"></div>
+
+
+    <label for="requestDate">
+      Дата
+    </label>
+
+    <input
+      type="date"
+      id="requestDate"
+    >
+
+
+    <label for="requestTime">
+      Время
+    </label>
+
+    <input
+      type="time"
+      id="requestTime"
+    >
+
+
+    <h2>Формат работы</h2>
+
+    <div class="checkbox-list">
+
+      <label class="checkbox">
+        <input
+          type="radio"
+          name="requestFormat"
+          value="У семьи"
+        >
+        <span>У семьи</span>
+      </label>
+
+      <label class="checkbox">
+        <input
+          type="radio"
+          name="requestFormat"
+          value="У няни"
+        >
+        <span>У няни</span>
+      </label>
+
+      <label class="checkbox">
+        <input
+          type="radio"
+          name="requestFormat"
+          value="В другом месте"
+        >
+        <span>В другом месте</span>
+      </label>
+
+    </div>
+
+
+    <label class="checkbox request-regular">
+      <input
+        type="checkbox"
+        id="requestRegular"
+      >
+      <span>Регулярно</span>
+    </label>
+
+
+    <label for="requestMessage">
+      Сообщение няне
+    </label>
+
+    <textarea
+      id="requestMessage"
+      maxlength="1000"
+      rows="6"
+      placeholder="Напишите немного о вашей ситуации или пожеланиях"
+    ></textarea>
+
+    <small>
+      До 1000 символов.
+    </small>
+
+  </div>
+
+
+  <div class="form-actions">
+
+    <button
+      class="button button-primary"
+      onclick="submitRequest()"
+    >
+      Отправить заявку
+    </button>
+
+  </div>
+
+
+  <button
+    class="close-button"
+    onclick="closeRequestScreen()"
+  >
+    × Закрыть
+  </button>
+
+</section>
+
+
+<!-- REQUEST SENT -->
+<section id="requestSent" class="screen hidden welcome">
+
+  <div class="logo">❤️</div>
+
+  <h1>Заявка отправлена няне</h1>
+
+  <p class="subtitle">
+    Теперь вы можете написать няне лично в Telegram.
+  </p>
+
+  <button
+    class="button button-primary"
+    onclick="contactNannyFromRequest()"
+  >
+    💬 Написать няне в Telegram
+  </button>
+
+  <button
+    class="button button-secondary"
+    onclick="openParentRequests()"
+  >
+    📋 Посмотреть мои заявки
+  </button>
+
+</section>
+
+
+<!-- PARENT REQUESTS -->
+<section id="parentRequests" class="screen hidden">
+
+  <header class="page-header">
+    <button class="page-close" onclick="closeParentRequests()">×</button>
+
+    <h1>Мои заявки</h1>
+
+    <p>
+      Здесь будут ваши обращения к няням.
+    </p>
+  </header>
+
+
+  <div class="request-tabs">
+
+    <button
+      id="parentUpcomingTab"
+      class="request-tab active"
+      onclick="showParentRequestTab('upcoming')"
+    >
+      Предстоящие
+    </button>
+
+    <button
+      id="parentPastTab"
+      class="request-tab"
+      onclick="showParentRequestTab('past')"
+    >
+      Прошедшие
+    </button>
+
+  </div>
+
+
+  <div id="parentRequestsList"></div>
+
+
+  <button
+    class="close-button"
+    onclick="closeParentRequests()"
+  >
+    × Закрыть
+  </button>
+
+</section>
+
+
+<!-- NANNY REQUESTS -->
+<section id="nannyRequests" class="screen hidden">
+
+  <header class="page-header">
+
+    <button
+      class="page-close"
+      onclick="closeNannyRequests()"
+    >
+      ×
+    </button>
+
+    <h1>Мои заявки</h1>
+
+    <p>
+      Здесь родители могут отправлять вам заявки.
+    </p>
+
+  </header>
+
+
+  <div class="request-tabs">
+
+    <button
+      id="nannyNewTab"
+      class="request-tab active"
+      onclick="showNannyRequestTab('new')"
+    >
+      Новые
+    </button>
+
+    <button
+      id="nannyUpcomingTab"
+      class="request-tab"
+      onclick="showNannyRequestTab('upcoming')"
+    >
+      Предстоящие
+    </button>
+
+    <button
+      id="nannyPastTab"
+      class="request-tab"
+      onclick="showNannyRequestTab('past')"
+    >
+      Прошедшие
+    </button>
+
+  </div>
+
+
+  <div id="nannyRequestsList"></div>
+
+
+  <button
+    class="close-button"
+    onclick="closeNannyRequests()"
+  >
+    × Закрыть
+  </button>
+
+</section>
 
 
 
@@ -403,7 +699,7 @@
 
         <button
           class="menu-button"
-          onclick="openFeature('Мои заявки')"
+          onclick="openNannyRequests()"
         >
           <span class="menu-icon">📋</span>
           <span>Мои заявки</span>
