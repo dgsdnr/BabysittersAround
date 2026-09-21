@@ -991,3 +991,216 @@ small {
   }
 
 }
+
+
+/* =========================================================
+   REQUESTS
+   ========================================================= */
+
+
+/* ---------- REQUEST TABS ---------- */
+
+.request-tabs {
+  display: flex;
+  gap: 8px;
+
+  margin: 0 0 18px 0;
+
+  overflow-x: auto;
+}
+
+
+.request-tab {
+  flex: 1;
+
+  min-width: 100px;
+
+  border: none;
+  border-radius: 12px;
+
+  padding: 11px 12px;
+
+  background: #f1eeee;
+
+  color: #555;
+
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+
+.request-tab.active {
+  background: #eadbd5;
+
+  color: #333;
+
+  font-weight: 600;
+}
+
+
+/* ---------- REQUEST NANNY SUMMARY ---------- */
+
+.request-nanny-summary {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+}
+
+
+.request-nanny-summary .nanny-result-photo {
+  flex-shrink: 0;
+}
+
+
+.request-nanny-summary p {
+  margin: 5px 0;
+
+  color: #666;
+}
+
+
+/* ---------- REQUEST CHILDREN ---------- */
+
+.request-child-item {
+  background: #faf7f5;
+
+  border-radius: 10px;
+
+  padding: 10px 12px;
+
+  margin-bottom: 7px;
+}
+
+
+.request-regular {
+  margin: 18px 0;
+}
+
+
+/* ---------- REQUEST CARD ---------- */
+
+.request-card {
+  background: white;
+
+  border-radius: 18px;
+
+  padding: 16px;
+
+  margin-bottom: 16px;
+
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+
+.request-card-header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 14px;
+}
+
+
+.request-card-header h2 {
+  margin: 0 0 5px 0;
+}
+
+
+.request-card-header p {
+  margin: 0;
+
+  color: #777;
+}
+
+
+.request-card-photo {
+  width: 58px;
+  height: 58px;
+
+  border-radius: 50%;
+
+  background: #fff1eb;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 30px;
+
+  flex-shrink: 0;
+}
+
+
+.request-card-info {
+  margin-bottom: 14px;
+}
+
+
+.request-card-info p {
+  margin: 8px 0;
+
+  line-height: 1.45;
+}
+
+
+.request-message {
+  background: #faf7f5;
+
+  border-radius: 12px;
+
+  padding: 12px;
+
+  margin-top: 12px;
+}
+
+
+.request-message strong {
+  display: block;
+
+  margin-bottom: 5px;
+}
+
+
+.request-message p {
+  margin: 0;
+}
+
+
+.muted-text {
+  color: #888;
+}
+
+
+/* ---------- REQUEST BUTTON ---------- */
+
+.request-card .button {
+  width: 100%;
+}
+
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 600px) {
+
+  .request-tabs {
+    gap: 6px;
+  }
+
+
+  .request-tab {
+    min-width: 0;
+
+    padding-left: 8px;
+    padding-right: 8px;
+
+    font-size: 13px;
+  }
+
+}
