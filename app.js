@@ -2388,3 +2388,1185 @@ function startRequestFromNanny() {
     selectedNannyId
   );
 }
+
+
+/* =========================================================
+   REQUESTS
+   Родитель → Няня
+   ========================================================= */
+
+
+/* ---------- REQUEST HELPERS ---------- */
+
+let currentRequestNannyId = null;
+let currentParentRequestTab = "upcoming";
+let currentNannyRequestTab = "new";
+
+
+function getRequests() {
+
+  return JSON.parse(
+    localStorage.getItem("babysitterRequests") || "[]"
+  );
+
+}
+
+
+function saveRequests(requests) {
+
+  localStorage.setItem(
+    "babysitterRequests",
+    JSON.stringify(requests)
+  );
+
+}
+
+
+function generateRequestId() {
+
+  return (
+    "request_" +
+    Date.now() +
+    "_" +
+    Math.random()
+      .toString(36)
+      .substring(2, 8)
+  );
+
+}
+
+
+function getRequestNanny(id) {
+
+  return testNannies.find(
+    nanny => nanny.id === id
+  );
+
+}
+
+
+/* ---------- CREATE REQUEST ---------- */
+
+function openCreateRequest(nannyId) {
+
+  const nanny =
+    getRequestNanny(nannyId);
+
+  if (!nanny) {
+    return;
+  }
+
+
+  currentRequestNannyId =
+    nannyId;
+
+
+  showScreen("createRequest");
+
+
+  /*
+    Загружаем профиль родителя.
+  */
+
+  const parentProfile =
+    JSON.parse(
+      localStorage.getItem("parentProfile") || "{}"
+    );
+
+
+  /*
+    Загружаем последний поиск.
+  */
+
+  const searchData =
+    JSON.parse(
+      localStorage.getItem("lastParentSearch") || "{}"
+    );
+
+
+  /*
+    Няня.
+  */
+
+  document.getElementById(
+    "requestNannySummary"
+  ).innerHTML = `
+
+    <div class="request-nanny-summary">
+
+      <div class="nanny-result-photo">
+        ${nanny.photo}
+      </div>
+
+      <div>
+        <strong>
+          ${escapeHtml(nanny.name)}, ${nanny.age}
+        </strong>
+
+        <p>
+          📍 ${escapeHtml(nanny.city)}
+        </p>
+
+        <p>
+          💰 от ${nanny.price}
+          ${escapeHtml(nanny.currency)} / час
+        </p>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  /*
+    Имя родителя.
+  */
+
+  document.getElementById(
+    "requestParentName"
+  ).value =
+    parentProfile.name || "";
+
+
+  /*
+    Город.
+  */
+
+  document.getElementById(
+    "requestCity"
+  ).value =
+    searchData.city ||
+    parentProfile.city ||
+    "";
+
+
+  /*
+    Дата.
+  */
+
+  document.getElementById(
+    "requestDate"
+  ).value =
+    searchData.date || "";
+
+
+  /*
+    Время.
+  */
+
+  document.getElementById(
+    "requestTime"
+  ).value =
+    searchData.time || "";
+
+
+  /*
+    Формат работы.
+  */
+
+  document
+    .querySelectorAll(
+      'input[name="requestFormat"]'
+    )
+    .forEach(input => {
+
+      input.checked =
+        input.value === searchData.formats?.[0];
+
+    });
+
+
+  /*
+    Регулярность по умолчанию выключена.
+  */
+
+  document.getElementById(
+    "requestRegular"
+  ).checked = false;
+
+
+  /*
+    Сообщение очищаем.
+  */
+
+  document.getElementById(
+    "requestMessage"
+  ).value = "";
+
+
+  /*
+    Показываем детей.
+  */
+
+  renderRequestChildren(
+    parentProfile.children || [],
+    searchData.ages || []
+  );
+
+}
+
+
+/* ---------- REQUEST CHILDREN ---------- */
+
+function renderRequestChildren(
+  children,
+  searchAges
+) {
+
+  const container =
+    document.getElementById(
+      "requestChildrenSummary"
+    );
+
+
+  /*
+    Если в профиле есть дети —
+    показываем их.
+  */
+
+  if (children.length) {
+
+    container.innerHTML =
+      children.map(child => `
+
+        <div class="request-child-item">
+
+          👶
+          ${escapeHtml(child.name || "Ребёнок")}
+
+          ${
+            child.age
+              ? " — " + escapeHtml(child.age)
+              : ""
+          }
+
+        </div>
+
+      `).join("");
+
+    return;
+  }
+
+
+  /*
+    Если профиль пока пустой,
+    используем возраст из поиска.
+  */
+
+  if (searchAges.length) {
+
+    container.innerHTML =
+      searchAges.map(age => `
+
+        <div class="request-child-item">
+          👶 ${escapeHtml(age)}
+        </div>
+
+      `).join("");
+
+    return;
+  }
+
+
+  container.innerHTML = `
+    <p class="muted-text">
+      Возраст ребёнка не указан.
+    </p>
+  `;
+
+}
+
+
+/* ---------- START REQUEST ---------- */
+
+function startRequest(id) {
+
+  openCreateRequest(id);
+
+}
+
+
+function startRequestFromNanny() {
+
+  if (!selectedNannyId) {
+    return;
+  }
+
+
+  openCreateRequest(
+    selectedNannyId
+  );
+
+}
+
+
+/* ---------- SUBMIT REQUEST ---------- */
+
+function submitRequest() {
+
+  if (!currentRequestNannyId) {
+    return;
+  }
+
+
+  const nanny =
+    getRequestNanny(
+      currentRequestNannyId
+    );
+
+
+  if (!nanny) {
+    return;
+  }
+
+
+  const parentProfile =
+    JSON.parse(
+      localStorage.getItem("parentProfile") || "{}"
+    );
+
+
+  const name =
+    document
+      .getElementById("requestParentName")
+      .value
+      .trim();
+
+
+  const city =
+    document
+      .getElementById("requestCity")
+      .value
+      .trim();
+
+
+  const date =
+    document
+      .getElementById("requestDate")
+      .value;
+
+
+  const time =
+    document
+      .getElementById("requestTime")
+      .value;
+
+
+  const formatInput =
+    document.querySelector(
+      'input[name="requestFormat"]:checked'
+    );
+
+
+  const format =
+    formatInput
+      ? formatInput.value
+      : "";
+
+
+  const regular =
+    document.getElementById(
+      "requestRegular"
+    ).checked;
+
+
+  const message =
+    document
+      .getElementById("requestMessage")
+      .value
+      .trim();
+
+
+  /*
+    Проверяем обязательные данные.
+  */
+
+  if (!name) {
+
+    alert("Укажите ваше имя.");
+
+    return;
+  }
+
+
+  if (!city) {
+
+    alert("Укажите город.");
+
+    return;
+  }
+
+
+  if (!date) {
+
+    alert("Выберите дату.");
+
+    return;
+  }
+
+
+  if (!format) {
+
+    alert("Выберите формат работы.");
+
+    return;
+  }
+
+
+  /*
+    Дети.
+  */
+
+  const children =
+    parentProfile.children || [];
+
+
+  const searchData =
+    JSON.parse(
+      localStorage.getItem("lastParentSearch") || "{}"
+    );
+
+
+  /*
+    Сохраняем заявку.
+  */
+
+  const request = {
+
+    id: generateRequestId(),
+
+    nannyId:
+      nanny.id,
+
+    nannyName:
+      nanny.name,
+
+    nannyPhoto:
+      nanny.photo,
+
+    parentName:
+      name,
+
+    parentCity:
+      city,
+
+    children:
+      children,
+
+    childAges:
+      searchData.ages || [],
+
+    date:
+      date,
+
+    time:
+      time,
+
+    format:
+      format,
+
+    regular:
+      regular,
+
+    message:
+      message,
+
+    status:
+      "new",
+
+    createdAt:
+      new Date().toISOString(),
+
+    meetingStatus:
+      null
+
+  };
+
+
+  const requests =
+    getRequests();
+
+
+  requests.push(
+    request
+  );
+
+
+  saveRequests(
+    requests
+  );
+
+
+  /*
+    Сохраняем имя и город
+    обратно в профиль.
+
+    Это удобно, если родитель
+    ещё не успел заполнить профиль.
+  */
+
+  const updatedProfile = {
+
+    ...parentProfile,
+
+    name:
+      name,
+
+    city:
+      city
+
+  };
+
+
+  localStorage.setItem(
+    "parentProfile",
+    JSON.stringify(updatedProfile)
+  );
+
+
+  /*
+    Показываем экран успеха.
+  */
+
+  showScreen(
+    "requestSent"
+  );
+
+}
+
+
+/* ---------- CONTACT NANNY ---------- */
+
+function contactNannyFromRequest() {
+
+  const nanny =
+    getRequestNanny(
+      currentRequestNannyId
+    );
+
+
+  if (!nanny) {
+    return;
+  }
+
+
+  /*
+    Пока настоящего Telegram username
+    у тестовых нянь нет.
+
+    Позже здесь будет:
+    https://t.me/username
+  */
+
+  alert(
+    "Здесь откроется Telegram-чата с няней."
+  );
+
+}
+
+
+/* ---------- PARENT REQUESTS ---------- */
+
+function openParentRequests() {
+
+  showScreen(
+    "parentRequests"
+  );
+
+
+  currentParentRequestTab =
+    "upcoming";
+
+
+  updateParentRequestTabs();
+
+
+  renderParentRequests();
+
+}
+
+
+function closeParentRequests() {
+
+  showScreen(
+    "parentHome"
+  );
+
+}
+
+
+function showParentRequestTab(tab) {
+
+  currentParentRequestTab =
+    tab;
+
+
+  updateParentRequestTabs();
+
+
+  renderParentRequests();
+
+}
+
+
+function updateParentRequestTabs() {
+
+  const upcoming =
+    document.getElementById(
+      "parentUpcomingTab"
+    );
+
+
+  const past =
+    document.getElementById(
+      "parentPastTab"
+    );
+
+
+  if (!upcoming || !past) {
+    return;
+  }
+
+
+  upcoming.classList.toggle(
+    "active",
+    currentParentRequestTab === "upcoming"
+  );
+
+
+  past.classList.toggle(
+    "active",
+    currentParentRequestTab === "past"
+  );
+
+}
+
+
+function renderParentRequests() {
+
+  const container =
+    document.getElementById(
+      "parentRequestsList"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  const requests =
+    getRequests();
+
+
+  /*
+    Пока разделяем только по дате.
+
+    В будущем здесь появятся:
+    new / upcoming / completed / cancelled
+  */
+
+  const today =
+    new Date()
+      .toISOString()
+      .slice(0, 10);
+
+
+  let filtered;
+
+
+  if (
+    currentParentRequestTab === "past"
+  ) {
+
+    filtered =
+      requests.filter(
+        request =>
+          request.date < today ||
+          request.status === "cancelled"
+      );
+
+  } else {
+
+    filtered =
+      requests.filter(
+        request =>
+          request.date >= today &&
+          request.status !== "cancelled"
+      );
+
+  }
+
+
+  if (!filtered.length) {
+
+    container.innerHTML = `
+
+      <div class="empty-state">
+
+        <h2>
+          ${
+            currentParentRequestTab === "past"
+              ? "Прошедших заявок пока нет"
+              : "Предстоящих заявок пока нет"
+          }
+        </h2>
+
+        <p>
+          Здесь будут отображаться ваши заявки.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML = "";
+
+
+  filtered
+    .sort(
+      (a, b) =>
+        a.date.localeCompare(b.date)
+    )
+    .forEach(request => {
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "request-card";
+
+
+      const childrenText =
+        request.children?.length
+
+          ? request.children
+              .map(
+                child =>
+                  `${child.name || "Ребёнок"}${
+                    child.age
+                      ? " — " + child.age
+                      : ""
+                  }`
+              )
+              .join(", ")
+
+          : request.childAges?.join(", ") ||
+            "Не указано";
+
+
+      card.innerHTML = `
+
+        <div class="request-card-header">
+
+          <div class="request-card-photo">
+            ${request.nannyPhoto || "👩🏻"}
+          </div>
+
+          <div>
+
+            <h2>
+              ${escapeHtml(request.nannyName)}
+            </h2>
+
+            <p>
+              📅 ${escapeHtml(request.date)}
+              ${
+                request.time
+                  ? " · " + escapeHtml(request.time)
+                  : ""
+              }
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="request-card-info">
+
+          <p>
+            👶 ${escapeHtml(childrenText)}
+          </p>
+
+          <p>
+            💼 ${escapeHtml(request.format)}
+          </p>
+
+          ${
+            request.regular
+              ? "<p>🔄 Регулярная заявка</p>"
+              : ""
+          }
+
+          ${
+            request.message
+              ? `
+                <p>
+                  💬 ${escapeHtml(request.message)}
+                </p>
+              `
+              : ""
+          }
+
+        </div>
+
+      `;
+
+
+      container.appendChild(
+        card
+      );
+
+    });
+
+}
+
+
+/* ---------- NANNY REQUESTS ---------- */
+
+function openNannyRequests() {
+
+  showScreen(
+    "nannyRequests"
+  );
+
+
+  currentNannyRequestTab =
+    "new";
+
+
+  updateNannyRequestTabs();
+
+
+  renderNannyRequests();
+
+}
+
+
+function closeNannyRequests() {
+
+  showScreen(
+    "nannyHome"
+  );
+
+}
+
+
+function showNannyRequestTab(tab) {
+
+  currentNannyRequestTab =
+    tab;
+
+
+  updateNannyRequestTabs();
+
+
+  renderNannyRequests();
+
+}
+
+
+function updateNannyRequestTabs() {
+
+  const newTab =
+    document.getElementById(
+      "nannyNewTab"
+    );
+
+
+  const upcoming =
+    document.getElementById(
+      "nannyUpcomingTab"
+    );
+
+
+  const past =
+    document.getElementById(
+      "nannyPastTab"
+    );
+
+
+  if (!newTab || !upcoming || !past) {
+    return;
+  }
+
+
+  newTab.classList.toggle(
+    "active",
+    currentNannyRequestTab === "new"
+  );
+
+
+  upcoming.classList.toggle(
+    "active",
+    currentNannyRequestTab === "upcoming"
+  );
+
+
+  past.classList.toggle(
+    "active",
+    currentNannyRequestTab === "past"
+  );
+
+}
+
+
+function renderNannyRequests() {
+
+  const container =
+    document.getElementById(
+      "nannyRequestsList"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  /*
+    В тестовом режиме определяем,
+    что сейчас мы смотрим от имени
+    конкретной тестовой няни.
+
+    Поскольку реального Telegram пользователя
+    ещё нет, берём первую няню Анну.
+
+    Позже это будет автоматически
+    определяться через аккаунт.
+  */
+
+  const currentNannyId =
+    localStorage.getItem(
+      "demoCurrentNannyId"
+    ) || "n1";
+
+
+  const requests =
+    getRequests();
+
+
+  const today =
+    new Date()
+      .toISOString()
+      .slice(0, 10);
+
+
+  let filtered;
+
+
+  if (
+    currentNannyRequestTab === "new"
+  ) {
+
+    filtered =
+      requests.filter(
+        request =>
+          request.nannyId === currentNannyId &&
+          request.status === "new" &&
+          request.date >= today
+      );
+
+  } else if (
+    currentNannyRequestTab === "upcoming"
+  ) {
+
+    filtered =
+      requests.filter(
+        request =>
+          request.nannyId === currentNannyId &&
+          request.date >= today &&
+          request.status !== "cancelled" &&
+          request.status !== "new"
+      );
+
+  } else {
+
+    filtered =
+      requests.filter(
+        request =>
+          request.nannyId === currentNannyId &&
+          (
+            request.date < today ||
+            request.status === "completed"
+          )
+      );
+
+  }
+
+
+  if (!filtered.length) {
+
+    container.innerHTML = `
+
+      <div class="empty-state">
+
+        <h2>
+          ${
+            currentNannyRequestTab === "new"
+              ? "Новых заявок пока нет"
+              : currentNannyRequestTab === "upcoming"
+                ? "Предстоящих заявок пока нет"
+                : "Прошедших заявок пока нет"
+          }
+        </h2>
+
+        <p>
+          Здесь будут отображаться заявки родителей.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML = "";
+
+
+  filtered
+    .sort(
+      (a, b) =>
+        a.date.localeCompare(b.date)
+    )
+    .forEach(request => {
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "request-card";
+
+
+      const childrenText =
+        request.children?.length
+
+          ? request.children
+              .map(
+                child =>
+                  `${child.name || "Ребёнок"}${
+                    child.age
+                      ? " — " + child.age
+                      : ""
+                  }`
+              )
+              .join(", ")
+
+          : request.childAges?.join(", ") ||
+            "Не указано";
+
+
+      card.innerHTML = `
+
+        <div class="request-card-header">
+
+          <div class="request-card-photo">
+            👤
+          </div>
+
+          <div>
+
+            <h2>
+              ${escapeHtml(request.parentName)}
+            </h2>
+
+            <p>
+              📍 ${escapeHtml(request.parentCity)}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="request-card-info">
+
+          <p>
+            📅 ${escapeHtml(request.date)}
+            ${
+              request.time
+                ? " · " + escapeHtml(request.time)
+                : ""
+            }
+          </p>
+
+          <p>
+            👶 ${escapeHtml(childrenText)}
+          </p>
+
+          <p>
+            💼 ${escapeHtml(request.format)}
+          </p>
+
+          ${
+            request.regular
+              ? "<p>🔄 Регулярная заявка</p>"
+              : ""
+          }
+
+          ${
+            request.message
+              ? `
+                <div class="request-message">
+                  <strong>Сообщение:</strong>
+                  <p>
+                    ${escapeHtml(request.message)}
+                  </p>
+                </div>
+              `
+              : ""
+          }
+
+        </div>
+
+
+        <button
+          class="button button-primary"
+          onclick="contactParentFromRequest('${request.id}')"
+        >
+          💬 Написать родителю
+        </button>
+
+      `;
+
+
+      container.appendChild(
+        card
+      );
+
+    });
+
+}
+
+
+/* ---------- CONTACT PARENT ---------- */
+
+function contactParentFromRequest(
+  requestId
+) {
+
+  const request =
+    getRequests().find(
+      item =>
+        item.id === requestId
+    );
+
+
+  if (!request) {
+    return;
+  }
+
+
+  alert(
+    "Здесь позже откроется Telegram-чата с родителем."
+  );
+
+}
