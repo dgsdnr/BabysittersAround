@@ -762,3 +762,232 @@ small {
 .legend-dot.busy {
   background: #df7777;
 }
+
+
+/* =========================================================
+   PARENT SIDE
+   ========================================================= */
+
+
+/* ---------- CHILDREN IN PARENT PROFILE ---------- */
+
+.child-row {
+  margin-bottom: 12px;
+}
+
+
+.child-row-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+
+.child-row-fields input,
+.child-row-fields select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+.child-delete-button {
+  width: 38px;
+  height: 38px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #ffe5e5;
+  color: #c44;
+
+  font-size: 22px;
+
+  cursor: pointer;
+}
+
+
+/* ---------- SEARCH RESULTS ---------- */
+
+#searchResults {
+  margin-top: 20px;
+}
+
+
+.search-results-header {
+  margin-bottom: 14px;
+}
+
+
+.search-results-header h2 {
+  margin-bottom: 4px;
+}
+
+
+.search-results-header p {
+  margin-top: 0;
+  color: #777;
+}
+
+
+.search-result-card {
+  background: white;
+
+  border-radius: 18px;
+
+  padding: 16px;
+
+  margin-bottom: 16px;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+
+.nanny-result-top {
+  display: flex;
+
+  gap: 14px;
+
+  align-items: center;
+}
+
+
+.nanny-result-photo {
+  width: 72px;
+  height: 72px;
+
+  border-radius: 50%;
+
+  background: #fff1eb;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 38px;
+
+  flex-shrink: 0;
+}
+
+
+.nanny-result-main h2 {
+  margin: 0 0 5px 0;
+}
+
+
+.nanny-result-main p {
+  margin: 4px 0;
+
+  color: #666;
+}
+
+
+.nanny-result-info {
+  margin-top: 14px;
+}
+
+
+.nanny-result-info p {
+  margin: 7px 0;
+}
+
+
+.nanny-result-buttons {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+
+  margin-top: 16px;
+}
+
+
+/* ---------- EMPTY SEARCH STATE ---------- */
+
+.empty-state {
+  background: white;
+
+  border-radius: 18px;
+
+  padding: 20px;
+
+  margin-top: 20px;
+
+  text-align: center;
+}
+
+
+.empty-state h2 {
+  margin-top: 0;
+}
+
+
+/* ---------- PUBLIC NANNY PROFILE ---------- */
+
+.public-nanny-profile {
+  padding-bottom: 10px;
+}
+
+
+.public-nanny-photo {
+  width: 110px;
+  height: 110px;
+
+  margin: 10px auto 16px;
+
+  border-radius: 50%;
+
+  background: #fff1eb;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 58px;
+}
+
+
+.public-nanny-profile > h1 {
+  text-align: center;
+
+  margin-bottom: 5px;
+}
+
+
+.profile-city {
+  text-align: center;
+
+  color: #777;
+
+  margin-top: 0;
+}
+
+
+.profile-rating {
+  text-align: center;
+
+  margin: 12px 0 20px;
+
+  font-weight: 600;
+}
+
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 600px) {
+
+  .child-row-fields {
+    grid-template-columns: 1fr;
+
+    gap: 8px;
+  }
+
+
+  .child-delete-button {
+    width: 100%;
+  }
+
+}
