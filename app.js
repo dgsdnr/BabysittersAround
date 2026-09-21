@@ -1087,3 +1087,1304 @@ function publishQuestionnaire() {
   );
 
 }
+
+
+/* =========================================================
+   PARENT SIDE
+   ========================================================= */
+
+
+/* ---------- TEST NANNIES ---------- */
+
+/*
+  Пока у нас ещё нет базы данных Supabase,
+  поэтому используем временных тестовых нянь.
+
+  Позже этот массив полностью заменит база данных.
+*/
+
+function getTestDate(offset) {
+  const date = new Date();
+  date.setHours(12, 0, 0, 0);
+  date.setDate(date.getDate() + offset);
+
+  return date.toISOString().slice(0, 10);
+}
+
+
+const testNannies = [
+  {
+    id: "n1",
+
+    name: "Анна",
+    age: 29,
+    city: "Нови-Сад",
+
+    photo: "👩🏻",
+
+    languages: [
+      "русский",
+      "английский"
+    ],
+
+    childAges: [
+      "1–3 года",
+      "3–6 лет",
+      "6–12 лет"
+    ],
+
+    workFormats: [
+      "У семьи",
+      "В другом месте"
+    ],
+
+    price: 10,
+    currency: "EUR",
+
+    rating: 4.9,
+    reviewsCount: 12,
+
+    about:
+      "Люблю детей, прогулки и активные игры. Спокойная и внимательная.",
+
+    experience:
+      "Более 6 лет работы с детьми.",
+
+    education:
+      "Педагогическое образование.",
+
+    courses:
+      "Первая помощь детям.",
+
+    additionalDuties: [
+      "Сопровождение ребёнка",
+      "Помощь с домашними заданиями"
+    ],
+
+    firstAid: true,
+    nightWork: false,
+    liveIn: false,
+    travel: false,
+
+    availability: {
+      [getTestDate(0)]: "free",
+      [getTestDate(1)]: "partial",
+      [getTestDate(2)]: "busy"
+    }
+  },
+
+
+  {
+    id: "n2",
+
+    name: "Мария",
+    age: 34,
+    city: "Белград",
+
+    photo: "👩🏼",
+
+    languages: [
+      "русский",
+      "сербский",
+      "английский"
+    ],
+
+    childAges: [
+      "До 1 года",
+      "1–3 года",
+      "3–6 лет"
+    ],
+
+    workFormats: [
+      "У семьи"
+    ],
+
+    price: 12,
+    currency: "EUR",
+
+    rating: 5,
+    reviewsCount: 8,
+
+    about:
+      "Опытная няня, люблю малышей и спокойные семейные прогулки.",
+
+    experience:
+      "Более 10 лет работы с детьми.",
+
+    education:
+      "Педагогическое образование.",
+
+    courses:
+      "Детская психология и первая помощь.",
+
+    additionalDuties: [
+      "Приготовление еды для ребёнка",
+      "Сопровождение ребёнка"
+    ],
+
+    firstAid: true,
+    nightWork: true,
+    liveIn: false,
+    travel: true,
+
+    availability: {
+      [getTestDate(0)]: "busy",
+      [getTestDate(1)]: "free",
+      [getTestDate(2)]: "free"
+    }
+  },
+
+
+  {
+    id: "n3",
+
+    name: "Елена",
+    age: 31,
+    city: "Нови-Сад",
+
+    photo: "👩🏼‍🦰",
+
+    languages: [
+      "русский"
+    ],
+
+    childAges: [
+      "3–6 лет",
+      "6–12 лет",
+      "12+ лет"
+    ],
+
+    workFormats: [
+      "У няни",
+      "В другом месте"
+    ],
+
+    price: 9,
+    currency: "EUR",
+
+    rating: 4.7,
+    reviewsCount: 5,
+
+    about:
+      "Мне нравится проводить с детьми время творчески: рисование, игры, чтение.",
+
+    experience:
+      "Более 5 лет.",
+
+    education:
+      "Высшее образование.",
+
+    courses:
+      "Курс первой помощи.",
+
+    additionalDuties: [
+      "Помощь с домашними заданиями",
+      "Прогулки"
+    ],
+
+    firstAid: true,
+    nightWork: false,
+    liveIn: false,
+    travel: false,
+
+    availability: {
+      [getTestDate(0)]: "partial",
+      [getTestDate(1)]: "busy",
+      [getTestDate(2)]: "free"
+    }
+  },
+
+
+  {
+    id: "n4",
+
+    name: "Ольга",
+    age: 27,
+    city: "Суботица",
+
+    photo: "👩🏻‍🦱",
+
+    languages: [
+      "русский",
+      "английский"
+    ],
+
+    childAges: [
+      "6–12 лет",
+      "12+ лет"
+    ],
+
+    workFormats: [
+      "У семьи"
+    ],
+
+    price: 8,
+    currency: "EUR",
+
+    rating: null,
+    reviewsCount: 0,
+
+    about:
+      "Буду рада познакомиться с вашей семьёй.",
+
+    experience:
+      "Есть опыт работы с детьми школьного возраста.",
+
+    education:
+      "—",
+
+    courses:
+      "—",
+
+    additionalDuties: [
+      "Помощь с домашними заданиями"
+    ],
+
+    firstAid: false,
+    nightWork: false,
+    liveIn: false,
+    travel: false,
+
+    /*
+      У этой няни календарь пока не заполнен.
+    */
+    availability: {}
+  }
+];
+
+
+/* ---------- COMMON HELPERS ---------- */
+
+function normalizeText(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase();
+}
+
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+/* ---------- PARENT PROFILE ---------- */
+
+function openParentProfile() {
+
+  showScreen("parentProfile");
+
+  loadParentProfile();
+}
+
+
+function closeParentScreen() {
+
+  showScreen("parentHome");
+}
+
+
+function loadParentProfile() {
+
+  const saved =
+    JSON.parse(
+      localStorage.getItem("parentProfile") || "{}"
+    );
+
+  document.getElementById("parentName").value =
+    saved.name || "";
+
+  document.getElementById("parentCity").value =
+    saved.city || "";
+
+  document.getElementById("parentAbout").value =
+    saved.about || "";
+
+  renderParentChildren(
+    saved.children || []
+  );
+}
+
+
+function renderParentChildren(children) {
+
+  const container =
+    document.getElementById("parentChildrenList");
+
+  container.innerHTML = "";
+
+  if (!children.length) {
+
+    children = [
+      {
+        name: "",
+        age: ""
+      }
+    ];
+  }
+
+  children.forEach((child, index) => {
+
+    const row =
+      document.createElement("div");
+
+    row.className = "child-row";
+
+    row.innerHTML = `
+      <div class="child-row-fields">
+
+        <input
+          type="text"
+          class="parent-child-name"
+          placeholder="Имя ребёнка"
+          value="${escapeHtml(child.name || "")}"
+        >
+
+        <select class="parent-child-age">
+
+          <option value="">Возраст</option>
+
+          <option value="До 1 года"
+            ${child.age === "До 1 года" ? "selected" : ""}>
+            До 1 года
+          </option>
+
+          <option value="1–3 года"
+            ${child.age === "1–3 года" ? "selected" : ""}>
+            1–3 года
+          </option>
+
+          <option value="3–6 лет"
+            ${child.age === "3–6 лет" ? "selected" : ""}>
+            3–6 лет
+          </option>
+
+          <option value="6–12 лет"
+            ${child.age === "6–12 лет" ? "selected" : ""}>
+            6–12 лет
+          </option>
+
+          <option value="12+ лет"
+            ${child.age === "12+ лет" ? "selected" : ""}>
+            12+ лет
+          </option>
+
+        </select>
+
+        <button
+          type="button"
+          class="child-delete-button"
+          onclick="removeParentChild(${index})"
+        >
+          ×
+        </button>
+
+      </div>
+    `;
+
+    container.appendChild(row);
+  });
+}
+
+
+function getParentChildrenFromForm() {
+
+  const rows =
+    document.querySelectorAll(".child-row");
+
+  const children = [];
+
+  rows.forEach(row => {
+
+    const name =
+      row.querySelector(".parent-child-name").value.trim();
+
+    const age =
+      row.querySelector(".parent-child-age").value;
+
+    if (name || age) {
+
+      children.push({
+        name,
+        age
+      });
+    }
+  });
+
+  return children;
+}
+
+
+function addParentChild() {
+
+  const current =
+    getParentChildrenFromForm();
+
+  current.push({
+    name: "",
+    age: ""
+  });
+
+  renderParentChildren(current);
+}
+
+
+function removeParentChild(index) {
+
+  const current =
+    getParentChildrenFromForm();
+
+  current.splice(index, 1);
+
+  renderParentChildren(current);
+}
+
+
+function saveParentProfile() {
+
+  const profile = {
+
+    name:
+      document.getElementById("parentName").value.trim(),
+
+    city:
+      document.getElementById("parentCity").value.trim(),
+
+    about:
+      document.getElementById("parentAbout").value.trim(),
+
+    children:
+      getParentChildrenFromForm()
+  };
+
+
+  localStorage.setItem(
+    "parentProfile",
+    JSON.stringify(profile)
+  );
+
+
+  alert("Профиль сохранён ❤️");
+}
+
+
+/* ---------- PARENT SEARCH ---------- */
+
+function openParentSearch() {
+
+  showScreen("parentSearch");
+
+
+  const saved =
+    JSON.parse(
+      localStorage.getItem("parentProfile") || "{}"
+    );
+
+
+  /*
+    Если город уже указан в профиле,
+    автоматически подставляем его.
+  */
+
+  document.getElementById("searchCity").value =
+    saved.city || "";
+
+
+  /*
+    Если есть дети, автоматически отмечаем
+    их возрастные группы.
+  */
+
+  document
+    .querySelectorAll('input[name="searchAge"]')
+    .forEach(input => {
+
+      input.checked =
+        (saved.children || [])
+          .some(child => child.age === input.value);
+
+    });
+
+
+  /*
+    Сегодня — минимальная доступная дата.
+  */
+
+  const dateInput =
+    document.getElementById("searchDate");
+
+  const today =
+    new Date().toISOString().slice(0, 10);
+
+  dateInput.min = today;
+
+
+  /*
+    Если дата ещё не выбрана,
+    ставим сегодня.
+  */
+
+  if (!dateInput.value) {
+    dateInput.value = today;
+  }
+
+
+  document.getElementById("searchResults").innerHTML = "";
+}
+
+
+function searchNannies() {
+
+  const city =
+    document
+      .getElementById("searchCity")
+      .value
+      .trim();
+
+
+  const ages =
+    Array.from(
+      document.querySelectorAll(
+        'input[name="searchAge"]:checked'
+      )
+    ).map(input => input.value);
+
+
+  const languages =
+    document
+      .getElementById("searchLanguages")
+      .value
+      .split(",")
+      .map(normalizeText)
+      .filter(Boolean);
+
+
+  const formats =
+    Array.from(
+      document.querySelectorAll(
+        'input[name="searchFormat"]:checked'
+      )
+    ).map(input => input.value);
+
+
+  const date =
+    document
+      .getElementById("searchDate")
+      .value;
+
+
+  const time =
+    document
+      .getElementById("searchTime")
+      .value;
+
+
+  /*
+    Проверяем обязательные поля.
+  */
+
+  if (!city) {
+
+    alert("Укажите город.");
+
+    return;
+  }
+
+
+  if (!ages.length) {
+
+    alert("Выберите возраст ребёнка.");
+
+    return;
+  }
+
+
+  if (!languages.length) {
+
+    alert("Укажите хотя бы один язык.");
+
+    return;
+  }
+
+
+  if (!formats.length) {
+
+    alert("Выберите формат работы.");
+
+    return;
+  }
+
+
+  if (!date) {
+
+    alert("Выберите дату.");
+
+    return;
+  }
+
+
+  /*
+    Сохраняем последний поиск.
+  */
+
+  const searchData = {
+
+    city,
+    ages,
+    languages,
+    formats,
+    date,
+    time
+
+  };
+
+
+  localStorage.setItem(
+    "lastParentSearch",
+    JSON.stringify(searchData)
+  );
+
+
+  /*
+    Фильтруем тестовых нянь.
+  */
+
+  let results =
+    testNannies.filter(nanny => {
+
+
+      /*
+        Город
+      */
+
+      if (
+        normalizeText(nanny.city) !==
+        normalizeText(city)
+      ) {
+
+        return false;
+      }
+
+
+      /*
+        Языки — OR.
+        Няня подходит, если знает
+        хотя бы один выбранный язык.
+      */
+
+      const languageMatch =
+        languages.some(selectedLanguage =>
+          nanny.languages.some(nannyLanguage =>
+            normalizeText(nannyLanguage)
+              .includes(selectedLanguage) ||
+            selectedLanguage
+              .includes(normalizeText(nannyLanguage))
+          )
+        );
+
+
+      if (!languageMatch) {
+        return false;
+      }
+
+
+      /*
+        Возраст — OR.
+      */
+
+      const ageMatch =
+        ages.some(selectedAge =>
+          nanny.childAges.includes(selectedAge)
+        );
+
+
+      if (!ageMatch) {
+        return false;
+      }
+
+
+      /*
+        Формат работы — OR.
+      */
+
+      const formatMatch =
+        formats.some(selectedFormat =>
+          nanny.workFormats.includes(selectedFormat)
+        );
+
+
+      if (!formatMatch) {
+        return false;
+      }
+
+
+      return true;
+
+    });
+
+
+  /*
+    Определяем доступность на выбранную дату.
+  */
+
+  results =
+    results.map(nanny => {
+
+      let status = "none";
+
+
+      if (
+        nanny.availability &&
+        nanny.availability[date]
+      ) {
+
+        status =
+          nanny.availability[date];
+
+      }
+
+
+      return {
+        ...nanny,
+        availabilityStatus: status
+      };
+
+    });
+
+
+  /*
+    Сортируем:
+    сначала свободные,
+    потом частично занятые,
+    потом занятые,
+    потом без календаря.
+  */
+
+  const order = {
+
+    free: 1,
+    partial: 2,
+    busy: 3,
+    none: 4
+
+  };
+
+
+  results.sort((a, b) => {
+
+    if (
+      order[a.availabilityStatus] !==
+      order[b.availabilityStatus]
+    ) {
+
+      return (
+        order[a.availabilityStatus] -
+        order[b.availabilityStatus]
+      );
+
+    }
+
+
+    /*
+      Няни без отзывов не считаются
+      рейтингом 0.
+      Поэтому внутри группы они
+      идут после оценённых.
+    */
+
+    if (
+      a.rating !== null &&
+      b.rating !== null
+    ) {
+
+      return b.rating - a.rating;
+
+    }
+
+
+    if (a.rating !== null) {
+      return -1;
+    }
+
+
+    if (b.rating !== null) {
+      return 1;
+    }
+
+
+    return 0;
+
+  });
+
+
+  renderSearchResults(
+    results,
+    date
+  );
+}
+
+
+/* ---------- SEARCH RESULTS ---------- */
+
+function getAvailabilityLabel(status) {
+
+  if (status === "free") {
+
+    return "🟢 Свободна";
+
+  }
+
+  if (status === "partial") {
+
+    return "🟡 Частично занята";
+
+  }
+
+  if (status === "busy") {
+
+    return "🔴 Занята";
+
+  }
+
+  return "⚪ Доступность не указана";
+}
+
+
+function renderSearchResults(results, date) {
+
+  const container =
+    document.getElementById("searchResults");
+
+
+  /*
+    Если вообще никого не нашли.
+  */
+
+  if (!results.length) {
+
+    container.innerHTML = `
+      <div class="empty-state">
+
+        <h2>Нянь по вашим параметрам пока не найдено.</h2>
+
+        <p>
+          Попробуйте изменить параметры поиска
+          или посмотреть нянь без указанной доступности.
+        </p>
+
+        <button
+          class="button button-secondary"
+          onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+        >
+          Изменить поиск
+        </button>
+
+      </div>
+    `;
+
+    return;
+  }
+
+
+  /*
+    Если результатов меньше 20 —
+    показываем также нянь без календаря.
+
+    Если больше 20, няней без календаря
+    пока не показываем.
+  */
+
+  let visibleResults =
+    results.filter(
+      nanny =>
+        nanny.availabilityStatus !== "none"
+    );
+
+
+  const withoutCalendar =
+    results.filter(
+      nanny =>
+        nanny.availabilityStatus === "none"
+    );
+
+
+  if (results.length < 20) {
+
+    visibleResults =
+      [
+        ...visibleResults,
+        ...withoutCalendar
+      ];
+
+  }
+
+
+  /*
+    Если после правила видимых результатов нет.
+  */
+
+  if (!visibleResults.length) {
+
+    container.innerHTML = `
+      <div class="empty-state">
+
+        <h2>Нянь с указанной доступностью не найдено.</h2>
+
+        <p>
+          Попробуйте изменить параметры поиска
+          или посмотреть другой день.
+        </p>
+
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML = `
+    <div class="search-results-header">
+      <h2>Найдено нянь: ${visibleResults.length}</h2>
+      <p>${escapeHtml(date)}</p>
+    </div>
+  `;
+
+
+  visibleResults.forEach(nanny => {
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "search-result-card";
+
+
+    let ratingText =
+      nanny.rating === null
+        ? "Отзывы пока отсутствуют"
+        : `⭐ ${nanny.rating} · ${nanny.reviewsCount} отзывов`;
+
+
+    card.innerHTML = `
+
+      <div class="nanny-result-top">
+
+        <div class="nanny-result-photo">
+          ${nanny.photo}
+        </div>
+
+        <div class="nanny-result-main">
+
+          <h2>
+            ${escapeHtml(nanny.name)}, ${nanny.age}
+          </h2>
+
+          <p>
+            📍 ${escapeHtml(nanny.city)}
+          </p>
+
+          <p>
+            🗣 ${escapeHtml(nanny.languages.join(", "))}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="nanny-result-info">
+
+        <p>
+          👶 ${escapeHtml(nanny.childAges.join(", "))}
+        </p>
+
+        <p>
+          💼 ${escapeHtml(nanny.workFormats.join(", "))}
+        </p>
+
+        <p>
+          💰 от ${nanny.price} ${escapeHtml(nanny.currency)} / час
+        </p>
+
+        <p>
+          ${getAvailabilityLabel(nanny.availabilityStatus)}
+        </p>
+
+        <p>
+          ${escapeHtml(ratingText)}
+        </p>
+
+      </div>
+
+
+      <div class="nanny-result-buttons">
+
+        <button
+          class="button button-secondary"
+          onclick="openPublicNannyProfile('${nanny.id}')"
+        >
+          Посмотреть анкету
+        </button>
+
+        <button
+          class="button button-primary"
+          onclick="startRequest('${nanny.id}')"
+        >
+          Связаться / создать заявку
+        </button>
+
+      </div>
+
+    `;
+
+
+    container.appendChild(card);
+
+  });
+}
+
+
+/* ---------- PUBLIC NANNY PROFILE ---------- */
+
+let selectedNannyId = null;
+
+
+function openPublicNannyProfile(id) {
+
+  const nanny =
+    testNannies.find(
+      item => item.id === id
+    );
+
+
+  if (!nanny) {
+    return;
+  }
+
+
+  selectedNannyId = id;
+
+
+  showScreen(
+    "publicNannyProfile"
+  );
+
+
+  const content =
+    document.getElementById(
+      "publicNannyContent"
+    );
+
+
+  const ratingBlock =
+    nanny.rating === null
+      ? "Отзывы пока отсутствуют"
+      : `⭐ ${nanny.rating} · ${nanny.reviewsCount} отзывов`;
+
+
+  content.innerHTML = `
+
+    <div class="public-nanny-profile">
+
+      <div class="public-nanny-photo">
+        ${nanny.photo}
+      </div>
+
+
+      <h1>
+        ${escapeHtml(nanny.name)}, ${nanny.age}
+      </h1>
+
+
+      <p class="profile-city">
+        📍 ${escapeHtml(nanny.city)}
+      </p>
+
+
+      <div class="profile-rating">
+        ${escapeHtml(ratingBlock)}
+      </div>
+
+
+      <div class="form-section">
+
+        <h2>Языки</h2>
+
+        <p>
+          ${escapeHtml(nanny.languages.join(", "))}
+        </p>
+
+      </div>
+
+
+      <div class="form-section">
+
+        <h2>С какими детьми работает</h2>
+
+        <p>
+          ${escapeHtml(nanny.childAges.join(", "))}
+        </p>
+
+      </div>
+
+
+      <div class="form-section">
+
+        <h2>Формат работы</h2>
+
+        <p>
+          ${escapeHtml(nanny.workFormats.join(", "))}
+        </p>
+
+      </div>
+
+
+      <div class="form-section">
+
+        <h2>Стоимость</h2>
+
+        <p>
+          От ${nanny.price}
+          ${escapeHtml(nanny.currency)}
+          / час
+        </p>
+
+      </div>
+
+
+      <div class="form-section">
+
+        <h2>О себе</h2>
+
+        <p>
+          ${escapeHtml(nanny.about)}
+        </p>
+
+      </div>
+
+
+      <div class="form-section">
+
+        <h2>Опыт</h2>
+
+        <p>
+          ${escapeHtml(nanny.experience)}
+        </p>
+
+      </div>
+
+
+      <div class="form-section">
+
+        <h2>Образование</h2>
+
+        <p>
+          ${escapeHtml(nanny.education)}
+        </p>
+
+      </div>
+
+
+      <div class="form-section">
+
+        <h2>Курсы и дополнительная подготовка</h2>
+
+        <p>
+          ${escapeHtml(nanny.courses)}
+        </p>
+
+      </div>
+
+
+      <div class="form-section">
+
+        <h2>Дополнительно</h2>
+
+        <p>
+          ${escapeHtml(
+            nanny.additionalDuties.join(", ")
+          )}
+        </p>
+
+      </div>
+
+
+      <div class="form-section">
+
+        <h2>Дополнительная информация</h2>
+
+        <p>
+          Первая помощь:
+          ${nanny.firstAid ? "Да" : "Нет"}
+        </p>
+
+        <p>
+          Ночная работа:
+          ${nanny.nightWork ? "Да" : "Нет"}
+        </p>
+
+        <p>
+          Проживание у семьи:
+          ${nanny.liveIn ? "Да" : "Нет"}
+        </p>
+
+        <p>
+          Путешествия с семьёй:
+          ${nanny.travel ? "Да" : "Нет"}
+        </p>
+
+      </div>
+
+
+      <div class="form-section">
+
+        <h2>Отзывы</h2>
+
+        <p>
+          ${escapeHtml(ratingBlock)}
+        </p>
+
+      </div>
+
+    </div>
+
+  `;
+}
+
+
+function closePublicNannyProfile() {
+
+  selectedNannyId = null;
+
+  showScreen("parentSearch");
+}
+
+
+/* ---------- REQUEST PLACEHOLDER ---------- */
+
+function startRequest(id) {
+
+  selectedNannyId = id;
+
+
+  alert(
+    "Заявку сделаем следующим этапом ❤️"
+  );
+}
+
+
+function startRequestFromNanny() {
+
+  if (!selectedNannyId) {
+    return;
+  }
+
+
+  startRequest(
+    selectedNannyId
+  );
+}
