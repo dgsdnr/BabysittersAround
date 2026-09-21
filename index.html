@@ -62,80 +62,303 @@
 
 
 
-    <!-- ========================= -->
     <!-- PARENT HOME -->
-    <!-- ========================= -->
+<section id="parentHome" class="screen hidden">
+  <header class="main-header">
+    <h1>Главная</h1>
+    <p>Babysitters Around</p>
+  </header>
 
-    <section
-      id="parentHome"
-      class="screen hidden"
+  <div class="menu">
+    <button class="menu-button" onclick="openParentSearch()">
+      <span class="menu-icon">🔎</span>
+      <span>Найти няню</span>
+    </button>
+
+    <button class="menu-button" onclick="openFeature('Мои заявки')">
+      <span class="menu-icon">📋</span>
+      <span>Мои заявки</span>
+    </button>
+
+    <button class="menu-button" onclick="openParentProfile()">
+      <span class="menu-icon">👤</span>
+      <span>Мой профиль</span>
+    </button>
+
+    <button class="menu-button" onclick="openFeature('Отзывы')">
+      <span class="menu-icon">⭐</span>
+      <span>Отзывы</span>
+    </button>
+
+    <button class="menu-button" onclick="openFeature('Поддержать проект')">
+      <span class="menu-icon">❤️</span>
+      <span>Поддержать проект</span>
+    </button>
+
+    <button class="menu-button" onclick="openFeature('Настройки')">
+      <span class="menu-icon">⚙️</span>
+      <span>Настройки</span>
+    </button>
+  </div>
+
+  <button class="close-button" onclick="goWelcome()">← Назад</button>
+</section>
+
+
+<!-- PARENT PROFILE -->
+<section id="parentProfile" class="screen hidden">
+
+  <header class="page-header">
+    <button class="page-close" onclick="closeParentScreen()">×</button>
+    <h1>Мой профиль</h1>
+    <p>Информация о вашей семье</p>
+  </header>
+
+  <div class="form-section">
+
+    <label for="parentName">Имя</label>
+    <input
+      type="text"
+      id="parentName"
+      placeholder="Ваше имя"
+      maxlength="100"
     >
 
-      <header class="main-header">
-        <h1>Главная</h1>
-        <p>Babysitters Around</p>
-      </header>
+    <label for="parentCity">Город</label>
+    <input
+      type="text"
+      id="parentCity"
+      placeholder="Например, Нови-Сад"
+      maxlength="100"
+    >
 
-      <div class="menu">
+  </div>
 
-        <button
-          class="menu-button"
-          onclick="openFeature('Поиск няни')"
-        >
-          <span class="menu-icon">🔎</span>
-          <span>Найти няню</span>
-        </button>
 
-        <button
-          class="menu-button"
-          onclick="openFeature('Мои заявки')"
-        >
-          <span class="menu-icon">📋</span>
-          <span>Мои заявки</span>
-        </button>
+  <div class="form-section">
 
-        <button
-          class="menu-button"
-          onclick="openFeature('Мой профиль')"
-        >
-          <span class="menu-icon">👤</span>
-          <span>Мой профиль</span>
-        </button>
+    <h2>Дети</h2>
 
-        <button
-          class="menu-button"
-          onclick="openFeature('Отзывы')"
-        >
-          <span class="menu-icon">⭐</span>
-          <span>Отзывы</span>
-        </button>
+    <p class="field-description">
+      Добавьте детей, для которых вы ищете няню.
+    </p>
 
-        <button
-          class="menu-button"
-          onclick="openFeature('Поддержать проект')"
-        >
-          <span class="menu-icon">❤️</span>
-          <span>Поддержать проект</span>
-        </button>
+    <div id="parentChildrenList"></div>
 
-        <button
-          class="menu-button"
-          onclick="openFeature('Настройки')"
-        >
-          <span class="menu-icon">⚙️</span>
-          <span>Настройки</span>
-        </button>
+    <button
+      type="button"
+      class="button button-secondary"
+      onclick="addParentChild()"
+    >
+      + Добавить ребёнка
+    </button>
 
-      </div>
+  </div>
 
-      <button
-        class="close-button"
-        onclick="goWelcome()"
-      >
-        ← Назад
-      </button>
 
-    </section>
+  <div class="form-section">
+
+    <label for="parentAbout">О семье</label>
+
+    <textarea
+      id="parentAbout"
+      maxlength="500"
+      rows="5"
+      placeholder="Расскажите немного о себе и вашей семье"
+    ></textarea>
+
+    <small>До 500 символов.</small>
+
+  </div>
+
+
+  <div class="form-actions">
+
+    <button
+      class="button button-primary"
+      onclick="saveParentProfile()"
+    >
+      Сохранить
+    </button>
+
+  </div>
+
+  <button class="close-button" onclick="closeParentScreen()">
+    × Закрыть
+  </button>
+
+</section>
+
+
+<!-- PARENT SEARCH -->
+<section id="parentSearch" class="screen hidden">
+
+  <header class="page-header">
+    <button class="page-close" onclick="closeParentScreen()">×</button>
+    <h1>Найти няню</h1>
+    <p>Укажите параметры поиска</p>
+  </header>
+
+
+  <div class="form-section">
+
+    <label for="searchCity">
+      Город *
+    </label>
+
+    <input
+      type="text"
+      id="searchCity"
+      placeholder="Например, Нови-Сад"
+    >
+
+
+    <h2>Возраст ребёнка *</h2>
+
+    <div class="checkbox-list">
+
+      <label class="checkbox">
+        <input type="checkbox" name="searchAge" value="До 1 года">
+        <span>До 1 года</span>
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" name="searchAge" value="1–3 года">
+        <span>1–3 года</span>
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" name="searchAge" value="3–6 лет">
+        <span>3–6 лет</span>
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" name="searchAge" value="6–12 лет">
+        <span>6–12 лет</span>
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" name="searchAge" value="12+ лет">
+        <span>12+ лет</span>
+      </label>
+
+    </div>
+
+
+    <label for="searchLanguages">
+      Язык *
+    </label>
+
+    <input
+      type="text"
+      id="searchLanguages"
+      placeholder="Например: русский, английский"
+    >
+
+    <small>
+      Можно указать несколько языков через запятую.
+    </small>
+
+
+    <h2>Формат работы *</h2>
+
+    <div class="checkbox-list">
+
+      <label class="checkbox">
+        <input type="checkbox" name="searchFormat" value="У семьи">
+        <span>У семьи</span>
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" name="searchFormat" value="У няни">
+        <span>У няни</span>
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" name="searchFormat" value="В другом месте">
+        <span>В другом месте</span>
+      </label>
+
+    </div>
+
+
+    <label for="searchDate">
+      Дата *
+    </label>
+
+    <input
+      type="date"
+      id="searchDate"
+    >
+
+
+    <label for="searchTime">
+      Время
+    </label>
+
+    <input
+      type="time"
+      id="searchTime"
+    >
+
+    <small>
+      Время можно указать позже. Сейчас оно не влияет на доступность няни.
+    </small>
+
+  </div>
+
+
+  <div class="form-actions">
+
+    <button
+      class="button button-primary"
+      onclick="searchNannies()"
+    >
+      🔎 Найти няню
+    </button>
+
+  </div>
+
+
+  <div id="searchResults"></div>
+
+
+  <button class="close-button" onclick="closeParentScreen()">
+    × Закрыть
+  </button>
+
+</section>
+
+
+<!-- PUBLIC NANNY PROFILE -->
+<section id="publicNannyProfile" class="screen hidden">
+
+  <header class="page-header">
+    <button class="page-close" onclick="closePublicNannyProfile()">×</button>
+    <h1>Анкета няни</h1>
+  </header>
+
+  <div id="publicNannyContent"></div>
+
+  <div class="form-actions">
+
+    <button
+      class="button button-primary"
+      onclick="startRequestFromNanny()"
+    >
+      💬 Связаться / создать заявку
+    </button>
+
+  </div>
+
+  <button class="close-button" onclick="closePublicNannyProfile()">
+    × Закрыть
+  </button>
+
+</section>
+
+
+<!-- NANNY HOME -->
 
 
 
