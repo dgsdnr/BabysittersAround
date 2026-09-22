@@ -3244,7 +3244,7 @@ function openNannyRequests() {
   updateNannyRequestTabs();
 
 
-  renderNannyRequests();
+  renderNannyRequests("new");
 
 }
 
@@ -3267,7 +3267,7 @@ function showNannyRequestTab(tab) {
   updateNannyRequestTabs();
 
 
-  renderNannyRequests();
+  renderNannyRequests(tab);
 
 }
 
@@ -3317,7 +3317,7 @@ function updateNannyRequestTabs() {
 }
 
 
-function renderNannyRequests() {
+function renderNannyRequests(currentTab) {
 
   const container =
     document.getElementById(
@@ -3537,19 +3537,25 @@ function renderNannyRequests() {
     💬 Написать родителю
   </button>
 
-  <button
-    class="button button-success"
-    onclick="nannyAgreedToRequest('${request.id}')"
-  >
-    ✓ Мы договорились
-  </button>
+  ${
+    currentTab === "new"
+      ? `
+        <button
+          class="button button-success"
+          onclick="nannyAgreedToRequest('${request.id}')"
+        >
+          ✓ Мы договорились
+        </button>
 
-  <button
-    class="button button-danger"
-    onclick="nannyDeclinedRequest('${request.id}')"
-  >
-    ✕ Не договорились
-  </button>
+        <button
+          class="button button-danger"
+          onclick="nannyDeclinedRequest('${request.id}')"
+        >
+          ✕ Не договорились
+        </button>
+      `
+      : ""
+  }
 
 </div>
 
