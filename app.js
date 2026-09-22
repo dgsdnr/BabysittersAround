@@ -3528,12 +3528,30 @@ function renderNannyRequests() {
         </div>
 
 
-        <button
-          class="button button-primary"
-          onclick="contactParentFromRequest('${request.id}')"
-        >
-          💬 Написать родителю
-        </button>
+        <div class="request-actions">
+
+  <button
+    class="button button-primary"
+    onclick="contactParentFromRequest('${request.id}')"
+  >
+    💬 Написать родителю
+  </button>
+
+  <button
+    class="button button-success"
+    onclick="nannyAgreedToRequest('${request.id}')"
+  >
+    ✓ Мы договорились
+  </button>
+
+  <button
+    class="button button-danger"
+    onclick="nannyDeclinedRequest('${request.id}')"
+  >
+    ✕ Не договорились
+  </button>
+
+</div>
 
       `;
 
@@ -3544,6 +3562,49 @@ function renderNannyRequests() {
 
     });
 
+}
+
+function nannyAgreedToRequest(requestId) {
+
+  const requests = getRequests();
+
+  const request = requests.find(
+    r => r.id === requestId
+  );
+
+  if (!request) {
+    return;
+  }
+
+  request.status = "upcoming";
+
+  saveRequests(requests);
+
+  alert("Заявка перенесена в «Предстоящие».");
+
+  renderNannyRequests();
+}
+
+
+function nannyDeclinedRequest(requestId) {
+
+  const requests = getRequests();
+
+  const request = requests.find(
+    r => r.id === requestId
+  );
+
+  if (!request) {
+    return;
+  }
+
+  request.status = "declined";
+
+  saveRequests(requests);
+
+  alert("Заявка удалена из новых.");
+
+  renderNannyRequests();
 }
 
 
