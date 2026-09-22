@@ -547,115 +547,54 @@
 
 
 <!-- PARENT REQUESTS -->
-<section id="parentRequests" class="screen hidden">
-
-  <header class="page-header">
-    <button class="page-close" onclick="closeParentRequests()">×</button>
-
-    <h1>Мои заявки</h1>
-
-    <p>
-      Здесь будут ваши обращения к няням.
-    </p>
-  </header>
-
+<div id="parentRequests" class="screen">
+  <div class="screen-header">
+    <button class="close-btn" onclick="closeParentRequests()">×</button>
+    <h2>Мои заявки</h2>
+  </div>
 
   <div class="request-tabs">
-
-    <button
-      id="parentUpcomingTab"
-      class="request-tab active"
-      onclick="showParentRequestTab('upcoming')"
-    >
+    <button id="parentTabUpcoming" class="request-tab active"
+            onclick="showParentRequestTab('upcoming')">
       Предстоящие
     </button>
 
-    <button
-      id="parentPastTab"
-      class="request-tab"
-      onclick="showParentRequestTab('past')"
-    >
+    <button id="parentTabPast" class="request-tab"
+            onclick="showParentRequestTab('past')">
       Прошедшие
     </button>
-
   </div>
 
-
   <div id="parentRequestsList"></div>
-
-
-  <button
-    class="close-button"
-    onclick="closeParentRequests()"
-  >
-    × Закрыть
-  </button>
-
-</section>
+</div>
 
 
 <!-- NANNY REQUESTS -->
-<section id="nannyRequests" class="screen hidden">
+<div id="nannyRequests" class="screen">
+  <div class="screen-header">
+    <button class="close-btn" onclick="closeNannyRequests()">×</button>
+    <h2>Мои заявки</h2>
+  </div>
 
-  <header class="page-header">
-
-    <button
-      class="page-close"
-      onclick="closeNannyRequests()"
-    >
-      ×
-    </button>
-
-    <h1>Мои заявки</h1>
-
-    <p>
-      Здесь родители могут отправлять вам заявки.
-    </p>
-
-  </header>
-
-
-  <div class="request-tabs">
-
-    <button
-      id="nannyNewTab"
-      class="request-tab active"
-      onclick="showNannyRequestTab('new')"
-    >
+  <div class="request-tabs nanny-request-tabs">
+    <button id="nannyTabNew" class="request-tab active"
+            onclick="showNannyRequestTab('new')">
       Новые
     </button>
 
-    <button
-      id="nannyUpcomingTab"
-      class="request-tab"
-      onclick="showNannyRequestTab('upcoming')"
-    >
+    <button id="nannyTabUpcoming" class="request-tab"
+            onclick="showNannyRequestTab('upcoming')">
       Предстоящие
     </button>
 
-    <button
-      id="nannyPastTab"
-      class="request-tab"
-      onclick="showNannyRequestTab('past')"
-    >
+    <button id="nannyTabPast" class="request-tab"
+            onclick="showNannyRequestTab('past')">
       Прошедшие
     </button>
-
   </div>
 
-
   <div id="nannyRequestsList"></div>
-
-
-  <button
-    class="close-button"
-    onclick="closeNannyRequests()"
-  >
-    × Закрыть
-  </button>
-
-</section>
-
+</div>
 
 
     <!-- ========================= -->
@@ -1394,6 +1333,26 @@
 
 
   <script src="app.js"></script>
+
+  <div id="meetingConfirmModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <h3>Встреча состоялась?</h3>
+
+    <p id="meetingConfirmText">
+      Вы договорились о встрече. Она уже должна была состояться.
+    </p>
+
+    <div class="modal-actions">
+      <button class="primary-btn" onclick="confirmMeeting(true)">
+        Да, состоялась
+      </button>
+
+      <button class="secondary-btn" onclick="confirmMeeting(false)">
+        Нет
+      </button>
+    </div>
+  </div>
+  </div>
 
 </body>
 
