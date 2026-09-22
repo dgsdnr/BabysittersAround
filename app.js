@@ -3557,8 +3557,21 @@ function renderNannyRequests(currentTab) {
       : ""
   }
 
-</div>
+  ${
+    currentTab === "upcoming" &&
+    isRequestDatePassed(request)
+      ? `
+        <button
+          class="button button-success"
+          onclick="openMeetingConfirmation('${request.id}')"
+        >
+          ✓ Встреча состоялась?
+        </button>
+      `
+      : ""
+  }
 
+</div>
       `;
 
 
@@ -3569,6 +3582,85 @@ function renderNannyRequests(currentTab) {
     });
 
 }
+
+function isRequestDatePassed(request) {
+  if (!request.date) {
+    return false;
+  }
+
+  const requestDate = new Date(request.date);
+
+  if (isNaN(requestDate.getTime())) {
+    return false;
+  }
+
+  const today = new Date();
+
+  requestDate.setHours(23, 59, 59, 999);
+  today.setHours(0, 0, 0, 0);
+
+  return requestDate < today;
+}
+
+let currentMeetingRequestId = null;
+
+
+function openMeetingConfirmation(requestId) {
+
+  currentMeetingRequestId = requestId;
+
+  const modal =
+    document.getElementById(
+      "meetingConfirmModal"
+    );
+
+  if (!modal) {
+    return;
+  }
+
+  modal.style.display = "flex";
+}
+
+function confirmMeeting(happened) {
+
+  if (!currentMeetingRequestId) {
+    return;
+  }
+
+  const requests = getRequests();
+
+  const request = requests.find(
+    r => r.id === currentMeetingRequestId
+  );
+
+  if (!request) {
+    currentMeetingRequestId = null;
+    return;
+  }
+
+  request.meetingStatus =
+    happened ? "yes" : "no";
+
+  request.status = "past";
+
+  saveRequests(requests);
+
+  const modal =
+    document.getElementById(
+      "meetingConfirmModal"
+    );
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+
+  currentMeetingRequestId = null;
+
+  renderNannyRequests(
+    "past"
+  );
+}
+
 
 function nannyAgreedToRequest(requestId) {
 
