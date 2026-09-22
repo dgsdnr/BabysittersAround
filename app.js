@@ -3603,7 +3603,6 @@ function isRequestDatePassed(request) {
 
 let currentMeetingRequestId = null;
 
-
 function openMeetingConfirmation(requestId) {
 
   currentMeetingRequestId = requestId;
