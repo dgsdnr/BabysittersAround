@@ -3373,7 +3373,7 @@ function renderNannyRequests(currentTab) {
           request.date >= today
       );
 
-  } else if (
+   } else if (
     currentNannyRequestTab === "upcoming"
   ) {
 
@@ -3382,8 +3382,7 @@ function renderNannyRequests(currentTab) {
         request =>
           request.nannyId === currentNannyId &&
           request.date >= today &&
-          request.status !== "cancelled" &&
-          request.status !== "new"
+          request.status === "upcoming"
       );
 
   } else {
