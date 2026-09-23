@@ -1204,3 +1204,41 @@ small {
   }
 
 }
+
+/* Большое и удобное окно подтверждения встречи */
+
+#meetingConfirmModal .modal-box {
+  width: calc(100% - 32px);
+  max-width: 420px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+#meetingConfirmModal .modal-box h3 {
+  font-size: 24px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+#meetingConfirmModal #meetingConfirmText {
+  font-size: 17px;
+  line-height: 1.5;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+#meetingConfirmModal .modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#meetingConfirmModal .modal-actions button {
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 16px;
+  font-size: 17px;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+}
