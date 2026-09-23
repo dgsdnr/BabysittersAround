@@ -3604,6 +3604,7 @@ function isRequestDatePassed(request) {
 let currentMeetingRequestId = null;
 
 function openMeetingConfirmation(requestId) {
+  alert("Функция работает");
 
   currentMeetingRequestId = requestId;
 
