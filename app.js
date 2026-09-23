@@ -3324,7 +3324,6 @@ function renderNannyRequests(currentTab) {
       "nannyRequestsList"
     );
 
-
   if (!container) {
     return;
   }
@@ -3334,12 +3333,6 @@ function renderNannyRequests(currentTab) {
     В тестовом режиме определяем,
     что сейчас мы смотрим от имени
     конкретной тестовой няни.
-
-    Поскольку реального Telegram пользователя
-    ещё нет, берём первую няню Анну.
-
-    Позже это будет автоматически
-    определяться через аккаунт.
   */
 
   const currentNannyId =
@@ -3361,6 +3354,12 @@ function renderNannyRequests(currentTab) {
   let filtered;
 
 
+  /*
+    НОВЫЕ
+    Показываем только новые заявки,
+    дата которых ещё не прошла.
+  */
+
   if (
     currentNannyRequestTab === "new"
   ) {
@@ -3373,7 +3372,22 @@ function renderNannyRequests(currentTab) {
           request.date >= today
       );
 
-   } else if (
+
+  /*
+    ПРЕДСТОЯЩИЕ
+    ВАЖНО:
+    здесь больше НЕ проверяем дату.
+
+    Если няня договорилась,
+    заявка остаётся в "Предстоящих"
+    даже после наступления даты.
+
+    Пока няня не ответит
+    "Да, состоялась" или "Нет",
+    заявка остаётся здесь.
+  */
+
+  } else if (
     currentNannyRequestTab === "upcoming"
   ) {
 
@@ -3381,9 +3395,19 @@ function renderNannyRequests(currentTab) {
       requests.filter(
         request =>
           request.nannyId === currentNannyId &&
-          request.date >= today &&
           request.status === "upcoming"
       );
+
+
+  /*
+    ПРОШЕДШИЕ
+    Сюда попадают только заявки,
+    по которым уже нажали
+    "Да, состоялась" или "Нет".
+
+    Статус в confirmMeeting()
+    становится "past".
+  */
 
   } else {
 
@@ -3391,10 +3415,7 @@ function renderNannyRequests(currentTab) {
       requests.filter(
         request =>
           request.nannyId === currentNannyId &&
-          (
-            request.date < today ||
-            request.status === "completed"
-          )
+          request.status === "past"
       );
 
   }
@@ -3529,48 +3550,51 @@ function renderNannyRequests(currentTab) {
 
         <div class="request-actions">
 
-  <button
-    class="button button-primary"
-    onclick="contactParentFromRequest('${request.id}')"
-  >
-    💬 Написать родителю
-  </button>
+          <button
+            class="button button-primary"
+            onclick="contactParentFromRequest('${request.id}')"
+          >
+            💬 Написать родителю
+          </button>
 
-  ${
-    currentTab === "new"
-      ? `
-        <button
-          class="button button-success"
-          onclick="nannyAgreedToRequest('${request.id}')"
-        >
-          ✓ Мы договорились
-        </button>
 
-        <button
-          class="button button-danger"
-          onclick="nannyDeclinedRequest('${request.id}')"
-        >
-          ✕ Не договорились
-        </button>
-      `
-      : ""
-  }
+          ${
+            currentTab === "new"
+              ? `
+                <button
+                  class="button button-success"
+                  onclick="nannyAgreedToRequest('${request.id}')"
+                >
+                  ✓ Мы договорились
+                </button>
 
-  ${
-    currentTab === "upcoming" &&
-    isRequestDatePassed(request)
-      ? `
-        <button
-          class="button button-success"
-          onclick="openMeetingConfirmation('${request.id}')"
-        >
-          ✓ Встреча состоялась?
-        </button>
-      `
-      : ""
-  }
+                <button
+                  class="button button-danger"
+                  onclick="nannyDeclinedRequest('${request.id}')"
+                >
+                  ✕ Не договорились
+                </button>
+              `
+              : ""
+          }
 
-</div>
+
+          ${
+            currentTab === "upcoming" &&
+            isRequestDatePassed(request)
+              ? `
+                <button
+                  class="button button-success"
+                  onclick="openMeetingConfirmation('${request.id}')"
+                >
+                  ✓ Встреча состоялась?
+                </button>
+              `
+              : ""
+          }
+
+        </div>
+
       `;
 
 
@@ -3581,6 +3605,7 @@ function renderNannyRequests(currentTab) {
     });
 
 }
+
 
 function isRequestDatePassed(request) {
   if (!request.date) {
